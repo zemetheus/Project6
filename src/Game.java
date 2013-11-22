@@ -14,7 +14,8 @@ public class Game extends JFrame
      * Creates a new instance of Game
      */
     public Game() {
-    	super("Alien Invaders");  //frame name
+    	//frame name
+    	super("Alien Invaders");  
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     	setLayout(new BorderLayout());
@@ -32,15 +33,15 @@ public class Game extends JFrame
     }
 	
 	/**
-     * Pause command used to control the speed of the bouncing ball animation.
-     * Currently pauses for 20 ms. Use smaller values for faster animation and
+     * Pause command used to control the speed of animation.
+     * Currently pauses for 10 ms. Use smaller values for faster animation and
      * vice versa.
      */
     public static void pause()
     {
     	try
 	    {
-    		Thread.sleep(20); //pause for 20 ms
+    		Thread.sleep(10); //pause for 10 ms
 	    }
 	    catch (Exception e)
 	    {
