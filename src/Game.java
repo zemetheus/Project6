@@ -50,8 +50,8 @@ public class Game extends JFrame
     }
     
     /**
-     * Helper routine to center a frame on the screen (will cause problems if
-     * frame is bigger than the screen!)
+     * Helper routine to center a frame on the screen (causes problems if
+     * frame is bigger than the screen)
      */
     public static void center(JFrame frame)
     {

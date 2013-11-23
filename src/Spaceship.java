@@ -36,12 +36,16 @@ public class Spaceship extends JPanel
 		    h = gp.getHeight();
 		
 		xCoord += xVel;
-		if(xCoord < 0 || xCoord > (w-ssWidth))
-			xVel *= -1;
 		if(xCoord > (w - ssWidth))
+		{
+			xVel *= -1;
 		    xCoord = w - ssWidth;
+		}
 		if(xCoord < 0)
+		{
+			xVel *= -1;
 			xCoord = 0;
+		}
 		
 		yCoord += yVel;
 		if(yCoord > (h-ssHeight))

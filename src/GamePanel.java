@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class GamePanel extends JPanel
 {
+	Scorebar scorebar = new Scorebar();
+	
 	ArrayList<Spaceship> enemies = new ArrayList<>();
 	ArrayList<Projectile> projectiles = new ArrayList<>();
 	Player player = new Player();
@@ -28,6 +30,8 @@ public class GamePanel extends JPanel
         g.setColor(Color.black);
         //paint background
         g.fillRect(0, 0, getWidth(), getHeight());
+        
+        //draw Scorebar
         
         /*
         for(Projectile p : projectiles)
