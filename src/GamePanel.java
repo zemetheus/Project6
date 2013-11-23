@@ -8,18 +8,56 @@ public class GamePanel extends JPanel
 	
 	ArrayList<Spaceship> enemies = new ArrayList<>();
 	ArrayList<Projectile> projectiles = new ArrayList<>();
-	Player player = new Player();
+	ArrayList<Integer> outOfRangeProjectiles = new ArrayList<>();
+	
+	Player player;
 	
 	public GamePanel()
 	{
 		super();
+		
+		//player is always hxw 30x50
+		player = new Player(235,650);
+		
 		enemies.add(new Spaceship(50,50));
+		enemies.add(new Spaceship(100,200));
 	}
 	
 	public void move(GamePanel gamePanel)
 	  {
+		if(!projectiles.isEmpty())
+		{
+			for(Projectile p : projectiles)
+			{
+				//move projectiles, also flags projectiles for being out of range
+				p.move(gamePanel);
+				
+				//make note of outOfRange projectiles
+				if(p.getIsOutOfRange())
+					outOfRangeProjectiles.add(projectiles.indexOf(p));
+			}
+		}
+		
+		//remove flagged projectiles
+		for(int i : outOfRangeProjectiles)
+		{
+			if(i >= 0)
+				projectiles.remove(i);
+		}
+		//clear all flags
+		outOfRangeProjectiles.clear();
+		
+		
 	    for(Spaceship s : enemies)
+	    {
 	   		s.move(gamePanel);
+	   		
+	   		if(!s.getHasProjectile())
+	   		{
+	   			projectiles.add(s.fire());
+	   			s.setHasProjectile(true);
+	   		}
+	    }
 	    repaint();
 	  }
 	
@@ -31,14 +69,21 @@ public class GamePanel extends JPanel
         //paint background
         g.fillRect(0, 0, getWidth(), getHeight());
         
+<<<<<<< HEAD
         //draw Scorebar
         
         /*
         for(Projectile p : projectiles)
+=======
+        if(!projectiles.isEmpty())
+>>>>>>> 16215fd6e59fed75d5330b0fe964ad47a63102a6
         {
-        	g.setColor(p.getColor());
+	        for(Projectile p : projectiles)
+	        {
+	        	g.setColor(p.getColor());
+	        	g.fillOval(p.getXCoord(),p.getYCoord(),p.getSSWidth(),p.getSSHeight());
+	        }
         }
-        */
         //Draw Enemies
         for(Spaceship ship : enemies)
         {
@@ -46,9 +91,11 @@ public class GamePanel extends JPanel
             g.fillRect(ship.getXCoord(), ship.getYCoord(),
                 ship.getSSWidth(), ship.getSSHeight());
         }
+        
         //Draw Player
         g.setColor(player.getColor());
         g.fillRect(player.getXCoord(),player.getYCoord(),
         		   player.getSSWidth(),player.getSSHeight());
+        
      }
 }

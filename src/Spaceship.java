@@ -13,6 +13,7 @@ public class Spaceship extends JPanel
 	private Color color;
 	
 	private boolean isDestroyed = false;
+	private boolean hasProjectile = false;
 	
 	/**
 	 * Empty Constructor
@@ -59,6 +60,14 @@ public class Spaceship extends JPanel
 			yCoord = 0;
 		}
 	}
+	
+	public Projectile fire()
+	{
+		int centerX = xCoord + ssWidth/2,
+		    bottomY = yCoord + ssHeight;
+		
+		return new Projectile(centerX,bottomY);
+	}
 	/**
 	 * setXCoord method sets xCoord
 	 * @param xCoord
@@ -99,7 +108,7 @@ public class Spaceship extends JPanel
 	{
 		int height;
 		
-		height = 50;
+		height = 30;
 		
 		return height;
 	}
@@ -127,7 +136,7 @@ public class Spaceship extends JPanel
 	{
 		int width;
 		
-		width = 30;
+		width = 50;
 		
 		return width;
 	}
@@ -173,6 +182,15 @@ public class Spaceship extends JPanel
 	{
 		return xVel;
 	}
+	//public int setStartYVel(){}
+	public void setYVel(int yVel)
+	{
+		this.yVel = yVel;
+	}
+	public int getYVel()
+	{
+		return yVel;
+	}
 	/**
 	 * the setStartColor sets a random color to the spaceship
 	 * @return Color color
@@ -202,4 +220,48 @@ public class Spaceship extends JPanel
 	{
 		return color;
 	}
+	public void setHasProjectile(boolean hasProjectile)
+	{
+		this.hasProjectile = hasProjectile;
+	}
+	/**
+	 * getHasProjectile method returns hasProjectile
+	 * @return hasProjectile
+	 */
+	public boolean getHasProjectile()
+	{
+		return hasProjectile;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
