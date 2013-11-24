@@ -12,6 +12,8 @@ public class Spaceship extends JPanel
 				yVel;
 	private Color color;
 	
+	private int projectileID;
+	
 	private boolean isDestroyed = false;
 	private boolean hasProjectile = false;
 	
@@ -31,12 +33,16 @@ public class Spaceship extends JPanel
 		this.color = setStartColor();
 	}
 	
-	public void move(GamePanel gp)
+	public void move(int xBound, int yBound)
 	{
-		int w = gp.getWidth(),
-		    h = gp.getHeight();
-		
 		xCoord += xVel;
+		yCoord += yVel;
+		
+		checkBounds(xBound,yBound);
+	}
+	
+	public void checkBounds(int w, int h)
+	{
 		if(xCoord > (w - ssWidth))
 		{
 			xVel *= -1;
@@ -47,8 +53,6 @@ public class Spaceship extends JPanel
 			xVel *= -1;
 			xCoord = 0;
 		}
-		
-		yCoord += yVel;
 		if(yCoord > (h-ssHeight))
 		{
 			yVel *= -1;
@@ -66,7 +70,20 @@ public class Spaceship extends JPanel
 		int centerX = xCoord + ssWidth/2,
 		    bottomY = yCoord + ssHeight;
 		
-		return new Projectile(centerX,bottomY);
+		Projectile p = new Projectile(centerX,bottomY,false);
+		
+		this.hasProjectile = true;
+		this.projectileID = p.getProjectileID();
+		
+		return p;
+	}
+	public void setProjectileID(int projectileID)
+	{
+		this.projectileID = projectileID;
+	}
+	public int getProjectileID()
+	{
+		return projectileID;
 	}
 	/**
 	 * setXCoord method sets xCoord

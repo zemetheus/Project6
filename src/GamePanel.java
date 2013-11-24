@@ -1,6 +1,10 @@
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GamePanel extends JPanel
 {
@@ -12,19 +16,67 @@ public class GamePanel extends JPanel
 	
 	Player player;
 	
-	public GamePanel()
+	final int w, h;
+	
+	public GamePanel(final int w, final int h)
 	{
 		super();
+		
+		this.w = w;
+		this.h = h;
+		
+		Spaceship s;
 		
 		//player is always hxw 30x50
 		player = new Player(235,650);
 		
 		enemies.add(new Spaceship(50,50));
 		enemies.add(new Spaceship(100,200));
+	
+		addKeyListener(new KeyAdapter()
+		{
+			public void keyPressed(KeyEvent e)
+			{
+				switch(e.getKeyCode())
+				{
+					case KeyEvent.VK_LEFT:
+					{
+						player.setXVel(-6);
+						player.move(w,h);
+						break;
+					}
+					case KeyEvent.VK_RIGHT:
+					{
+						player.setXVel(6);
+						player.move(w,h);
+						break;
+					}
+					case KeyEvent.VK_SPACE:
+					{
+						if(!player.getHasProjectile())
+							projectiles.add(player.fire());
+						
+						break;
+					}
+					case KeyEvent.VK_ESCAPE:
+					{
+						System.exit(0);
+					}
+					default:
+					{
+						break;
+					}
+				}
+			}
+		}
+		);
 	}
 	
 	public void move(GamePanel gamePanel)
 	  {
+		//player movement is handled by the KeyListener
+		
+		//move projectiles
 		if(!projectiles.isEmpty())
 		{
 			for(Projectile p : projectiles)
@@ -34,30 +86,49 @@ public class GamePanel extends JPanel
 				
 				//make note of outOfRange projectiles
 				if(p.getIsOutOfRange())
+				{
+					if(p.getIsPlayerProjectile())
+						player.setHasProjectile(false);
+					
 					outOfRangeProjectiles.add(projectiles.indexOf(p));
+				}
 			}
 		}
 		
 		//remove flagged projectiles
-		for(int i : outOfRangeProjectiles)
-		{
-			if(i >= 0)
-				projectiles.remove(i);
-		}
-		//clear all flags
-		outOfRangeProjectiles.clear();
 		
-		
+		//move enemies
 	    for(Spaceship s : enemies)
 	    {
-	   		s.move(gamePanel);
+	   		s.move(w,h);
+	   		
+	   		//remove flagged projectiles and check against current ships 
+	   		//projectile ID. setHasProjectile to false if PID = s.getPID
+	   		
+	   		for(int i : outOfRangeProjectiles)
+			{
+				if(i >= 0)
+				{
+					if(s.getProjectileID() == projectiles.get(i).getProjectileID())
+						s.setHasProjectile(false);
+					
+					projectiles.remove(i);
+				}
+					
+			}
 	   		
 	   		if(!s.getHasProjectile())
 	   		{
-	   			projectiles.add(s.fire());
-	   			s.setHasProjectile(true);
+	   			Projectile p = s.fire();
+	   			
+	   			projectiles.add(p);
 	   		}
 	    }
+	    
+	  //clear all flags
+	  outOfRangeProjectiles.clear();
+	  		
+	    
 	    repaint();
 	  }
 	

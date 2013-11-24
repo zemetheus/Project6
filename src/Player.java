@@ -4,6 +4,7 @@ import javax.swing.*;
 public class Player extends Spaceship
 {
 	private boolean hasProjectile = false;
+	private int projectileID;
 	
 	public Player()
 	{
@@ -22,5 +23,22 @@ public class Player extends Spaceship
 		super.setYVel(0);
 		
 		super.setColor(super.setStartColor());
+	}
+	
+	public Projectile fire()
+	{
+		int xCoord = super.getXCoord(),
+			yCoord = super.getYCoord(),
+			width = super.getSSWidth();
+		
+		int centerX = xCoord + width/2;
+		
+		Projectile p = new Projectile(centerX,yCoord,true);
+		
+		super.setHasProjectile(true);
+		
+		super.setProjectileID(p.getProjectileID());
+		
+		return p;
 	}
 }
