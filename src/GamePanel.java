@@ -70,7 +70,9 @@ public class GamePanel extends JPanel
         g.fillRect(0, 0, getWidth(), getHeight());
         
         //draw Scorebar
-        g.drawString("String", 30, 600);
+        
+        scorebar.drawScorebar(g);
+        
         
         //draw projectiles
         if(!projectiles.isEmpty())
