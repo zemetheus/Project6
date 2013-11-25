@@ -29,15 +29,14 @@ public class Player extends Spaceship
 	{
 		int xCoord = super.getXCoord(),
 			yCoord = super.getYCoord(),
-			width = super.getSSWidth();
+			width = super.getSSWidth(),
+			shipID = super.getShipID();
 		
 		int centerX = xCoord + width/2;
 		
 		Projectile p = new Projectile(centerX,yCoord,true);
 		
 		super.setHasProjectile(true);
-		
-		super.setProjectileID(p.getProjectileID());
 		
 		return p;
 	}
