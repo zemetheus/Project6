@@ -1,5 +1,4 @@
 import java.awt.*;
-
 import javax.swing.*;
 
 public class Spaceship extends JPanel
@@ -103,7 +102,7 @@ public class Spaceship extends JPanel
 	 */
 	public void setShipID(int projectileID)
 	{
-		this.ID = projectileID;
+		this.shipID = projectileID;
 	}
 	/**
 	 * getShipID method returns shipID

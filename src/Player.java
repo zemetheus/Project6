@@ -1,11 +1,5 @@
-import java.awt.*;
-import javax.swing.*;
-
 public class Player extends Spaceship
 {
-	private boolean hasProjectile = false;
-	private int projectileID;
-	
 	public Player()
 	{
 		super();
@@ -29,8 +23,7 @@ public class Player extends Spaceship
 	{
 		int xCoord = super.getXCoord(),
 			yCoord = super.getYCoord(),
-			width = super.getSSWidth(),
-			shipID = super.getShipID();
+			width = super.getSSWidth();
 		
 		int centerX = xCoord + width/2;
 		

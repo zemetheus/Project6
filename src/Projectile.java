@@ -1,8 +1,5 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.swing.*;
 
 public class Projectile extends Spaceship
 {
