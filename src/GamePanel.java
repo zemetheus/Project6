@@ -10,8 +10,8 @@ public class GamePanel extends JPanel
 {
 	Scorebar scorebar = new Scorebar();
 	
-	ArrayList<Spaceship> enemies = new ArrayList<>();
-	ArrayList<Projectile> projectiles = new ArrayList<>();
+	HashMap<Integer,Spaceship> enemies = new HashMap<>();
+	HashMap<Integer,Projectile> projectiles = new HashMap<>();
 	ArrayList<Integer> outOfRangeProjectiles = new ArrayList<>();
 	
 	Player player;
@@ -25,13 +25,16 @@ public class GamePanel extends JPanel
 		this.w = w;
 		this.h = h;
 		
-		Spaceship s;
+		
 		
 		//player is always hxw 30x50
 		player = new Player(235,650);
 		
-		enemies.add(new Spaceship(50,50));
-		enemies.add(new Spaceship(100,200));
+		Spaceship s = new Spaceship(50,50);
+		
+		enemies.put(s.getShipID(),s);
+		s = new Spaceship(100,200);
+		enemies.put(s.getShipID(),s);
 	
 		addKeyListener(new KeyAdapter()
 		{
@@ -54,7 +57,7 @@ public class GamePanel extends JPanel
 					case KeyEvent.VK_SPACE:
 					{
 						if(!player.getHasProjectile())
-							projectiles.add(player.fire());
+							projectiles.put(player.getShipID(),player.fire());
 						
 						break;
 					}
@@ -74,59 +77,64 @@ public class GamePanel extends JPanel
 	
 	public void move(GamePanel gamePanel)
 	  {
-		//player movement is handled by the KeyListener
+		Projectile temp;
+		
+		//player movement is handled by the KeyListener/Handler
 		
 		//move projectiles
 		if(!projectiles.isEmpty())
 		{
-			for(Projectile p : projectiles)
+			for(Integer i : projectiles.keySet())
 			{
+				temp = projectiles.get(i);
+				
 				//move projectiles, also flags projectiles for being out of range
-				p.move(gamePanel);
+				temp.move(gamePanel);
+				
+				temp.checkCollision(new ArrayList<Spaceship>(enemies.values()),player);
 				
 				//make note of outOfRange projectiles
-				if(p.getIsOutOfRange())
-				{
-					if(p.getIsPlayerProjectile())
-						player.setHasProjectile(false);
-					
-					outOfRangeProjectiles.add(projectiles.indexOf(p));
-				}
+				if(temp.getIsOutOfRange())
+					outOfRangeProjectiles.add(i);
+				
 			}
 		}
 		
-		//remove flagged projectiles
 		
+		//remove flagged projectiles
+		for(int i : outOfRangeProjectiles)
+		{
+			if(i > 0 && projectiles.containsKey(i))
+			{
+				enemies.get(i).setHasProjectile(false);
+				projectiles.remove(i);
+			}
+			
+			if(i == 0 && player.getHasProjectile())
+			{
+				player.setHasProjectile(false);
+				projectiles.remove(i);
+			}
+			
+		}
+		
+		//clear all flags
+		outOfRangeProjectiles.clear();
+		  
 		//move enemies
-	    for(Spaceship s : enemies)
+	    for(Spaceship s : enemies.values())
 	    {
 	   		s.move(w,h);
-	   		
-	   		//remove flagged projectiles and check against current ships 
-	   		//projectile ID. setHasProjectile to false if PID = s.getPID
-	   		
-	   		for(int i : outOfRangeProjectiles)
-			{
-				if(i >= 0)
-				{
-					if(s.getProjectileID() == projectiles.get(i).getProjectileID())
-						s.setHasProjectile(false);
-					
-					projectiles.remove(i);
-				}
-					
-			}
 	   		
 	   		if(!s.getHasProjectile())
 	   		{
 	   			Projectile p = s.fire();
 	   			
-	   			projectiles.add(p);
+	   			projectiles.put(s.getShipID(),p);
 	   		}
 	    }
 	    
-	  //clear all flags
-	  outOfRangeProjectiles.clear();
+	 
 	  		
 	    
 	    repaint();
@@ -147,15 +155,11 @@ public class GamePanel extends JPanel
         
         //draw projectiles
         if(!projectiles.isEmpty())
-        {
-	        for(Projectile p : projectiles)
-	        {
-	        	g.setColor(p.getColor());
-	        	g.fillOval(p.getXCoord(),p.getYCoord(),p.getSSWidth(),p.getSSHeight());
-	        }
-        }
+           	for(Projectile p : projectiles.values())
+		        p.draw(g);
+        
         //Draw Enemies
-        for(Spaceship ship : enemies)
+        for(Spaceship ship : enemies.values())
         {
         	g.setColor(ship.getColor());
             g.fillRect(ship.getXCoord(), ship.getYCoord(),

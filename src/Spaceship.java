@@ -1,9 +1,12 @@
 import java.awt.*;
-
 import javax.swing.*;
 
 public class Spaceship extends JPanel
 {
+	private static int ID = 0;
+	private int shipID;
+	
+	
 	private int xCoord,
 				yCoord,
 				ssHeight,
@@ -11,8 +14,6 @@ public class Spaceship extends JPanel
 				xVel,
 				yVel;
 	private Color color;
-	
-	private int projectileID;
 	
 	private boolean isDestroyed = false;
 	private boolean hasProjectile = false;
@@ -31,6 +32,9 @@ public class Spaceship extends JPanel
 		this.xVel = setStartXVel();
 		this.yVel = 0;
 		this.color = setStartColor();
+		
+		this.shipID = ID;
+		ID++;
 	}
 	
 	public void move(int xBound, int yBound)
@@ -73,17 +77,40 @@ public class Spaceship extends JPanel
 		Projectile p = new Projectile(centerX,bottomY,false);
 		
 		this.hasProjectile = true;
-		this.projectileID = p.getProjectileID();
 		
 		return p;
 	}
-	public void setProjectileID(int projectileID)
+	/**
+	 * setIsDestroyed method sets isDestroyed
+	 * @param isDestroyed
+	 */
+	public void setIsDestroyed(boolean isDestroyed)
 	{
-		this.projectileID = projectileID;
+		this.isDestroyed = isDestroyed;
 	}
-	public int getProjectileID()
+	/**
+	 * getIsDestroyed method returns isDestroyed
+	 * @return
+	 */
+	public boolean getIsDestroyed()
 	{
-		return projectileID;
+		return isDestroyed;
+	}
+	/**
+	 * setShipID sets projectileID
+	 * @param projectileID
+	 */
+	public void setShipID(int projectileID)
+	{
+		this.shipID = projectileID;
+	}
+	/**
+	 * getShipID method returns shipID
+	 * @return
+	 */
+	public int getShipID()
+	{
+		return shipID;
 	}
 	/**
 	 * setXCoord method sets xCoord
@@ -250,35 +277,3 @@ public class Spaceship extends JPanel
 		return hasProjectile;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
