@@ -1,10 +1,11 @@
 public class Player extends Spaceship
 {
+	private int score = 0;
+	
 	public Player()
 	{
 		super();
 	}
-	
 	
 	public Player(int xCoord, int yCoord)
 	{
@@ -32,5 +33,17 @@ public class Player extends Spaceship
 		super.setHasProjectile(true);
 		
 		return p;
+	}
+	public void addScore(int score)
+	{
+		this.score += score;
+	}
+	public void setScore(int score)
+	{
+		this.score = score;
+	}
+	public int getScore()
+	{
+		return score;
 	}
 }

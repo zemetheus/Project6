@@ -80,6 +80,18 @@ public class Spaceship extends JPanel
 		
 		return p;
 	}
+	
+	public int destroy()
+	{
+		this.isDestroyed = true;
+		
+		int score;
+		
+		score = Math.abs(xVel);
+		
+		return score;
+	}
+	
 	/**
 	 * setIsDestroyed method sets isDestroyed
 	 * @param isDestroyed

@@ -3,10 +3,8 @@ import java.util.ArrayList;
 
 public class Projectile extends Spaceship
 {
-	private boolean isOutOfRange = false,
+	private boolean isInvalid = false,
 					isPlayerProjectile;
-	
-	private int xCenter, yCenter;
 	
 	public Projectile(){}
 	
@@ -32,9 +30,6 @@ public class Projectile extends Spaceship
 		super.setColor(new Color(255,255,255));
 		
 		this.isPlayerProjectile = isPlayerProjectile;
-		
-		this.xCenter = xCoord+5;
-		this.yCenter = yCoord+5;
 	}
 	
 	public void draw(Graphics g)
@@ -44,7 +39,7 @@ public class Projectile extends Spaceship
     			   super.getSSWidth(),super.getSSHeight());
 	}
 	
-	public void move(GamePanel gp)
+	public void move(GamePanel gp,ArrayList<Spaceship> ships,Player player)
 	{
 		int w = gp.getHeight(),
 			yCoord = super.getYCoord();
@@ -52,9 +47,11 @@ public class Projectile extends Spaceship
 		super.setYCoord(yCoord + super.getYVel());
 		
 		if(yCoord > w || yCoord < 0)
-			isOutOfRange = true;
+			isInvalid = true;
 		else
-			isOutOfRange = false;
+			isInvalid = false;
+		
+		checkCollision(ships,player);
 	}
 	
 	public void checkCollision(ArrayList<Spaceship> ships, Player player)
@@ -64,36 +61,69 @@ public class Projectile extends Spaceship
 		//boundaries
 		int xBoundLow, xBoundHigh, yBoundLow, yBoundHigh;
 		
-		for(Spaceship s : ships)
+		//coords; treat projectiles as point particles at their
+		//centers
+		int xCenter = this.getXCenter(),
+			yCenter = this.getYCenter();
+		
+		if(isPlayerProjectile)
 		{
-			xBoundLow = s.getXCoord();
-			xBoundHigh = xBoundLow + s.getSSWidth();
-			yBoundLow = s.getYCoord();
-			yBoundHigh = yBoundLow+s.getSSHeight();
+			for(Spaceship s : ships)
+			{
+				if(s.getIsDestroyed())
+					continue;
+				
+				xBoundLow = s.getXCoord();
+				xBoundHigh = xBoundLow + s.getSSWidth();
+				yBoundLow = s.getYCoord();
+				yBoundHigh = yBoundLow+s.getSSHeight();
+				
+				if(xCenter > xBoundLow && xCenter < xBoundHigh &&
+				   yCenter > yBoundLow && yCenter < yBoundHigh)
+				{
+					player.addScore(s.destroy());
+					this.isInvalid = true;
+				}
+			}
+		}
+		else
+		{
+			xBoundLow = player.getXCoord();
+			xBoundHigh = xBoundLow + player.getSSWidth();
+			yBoundLow = player.getYCoord();
+			yBoundHigh = yBoundLow + player.getSSHeight();
 			
 			if(xCenter > xBoundLow && xCenter < xBoundHigh &&
 			   yCenter > yBoundLow && yCenter < yBoundHigh)
 			{
-				s.setIsDestroyed(true);
-				this.isOutOfRange = true;
+				player.setIsDestroyed(true);
+				this.isInvalid = true;
 			}
 		}
 	}
 	
 	public int getXCenter()
 	{
-		return xCenter;
+		return super.getXCoord() + 5;
 	}
 	public int getYCenter()
 	{
-		return yCenter;
+		return super.getYCoord() + 5;
+	}
+	public void setIsPlayerProjectile(boolean isPlayerProjectile)
+	{
+		this.isPlayerProjectile = isPlayerProjectile;
 	}
 	public boolean getIsPlayerProjectile()
 	{
 		return isPlayerProjectile;
 	}
-	public boolean getIsOutOfRange()
+	public void setIsInvalid(boolean isInvalid)
 	{
-		return isOutOfRange;
+		this.isInvalid = isInvalid;
+	}
+	public boolean getIsInvalid()
+	{
+		return isInvalid;
 	}
 }

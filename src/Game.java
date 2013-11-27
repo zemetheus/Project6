@@ -19,17 +19,19 @@ public class Game extends JFrame
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     	setLayout(new BorderLayout());
-    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT);
+    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT,2);
     	add(gamePanel);
     	center(this);
     	setVisible(true);
     	gamePanel.setFocusable(true);
 
+    	boolean gameOver = false;
+    	
     	//main game loop, close to halt
-    	while(true)
+    	while(!gameOver)
     	{
     		pause();
-    		gamePanel.move(gamePanel);
+    		gameOver = gamePanel.move(gamePanel);
     	}
     }
 	

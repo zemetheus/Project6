@@ -8,33 +8,38 @@ import java.util.HashMap;
 
 public class GamePanel extends JPanel
 {
-	Scorebar scorebar = new Scorebar();
+	private Scorebar scorebar = new Scorebar();
 	
-	HashMap<Integer,Spaceship> enemies = new HashMap<>();
-	HashMap<Integer,Projectile> projectiles = new HashMap<>();
-	ArrayList<Integer> outOfRangeProjectiles = new ArrayList<>();
+	private HashMap<Integer,Spaceship> enemies = new HashMap<>();
+	private HashMap<Integer,Projectile> projectiles = new HashMap<>();
+	private ArrayList<Integer> invalidProjectiles = new ArrayList<>();
 	
-	Player player;
+	private Player player;
 	
-	final int w, h;
+	private boolean allEnemiesDestroyed = false;
 	
-	public GamePanel(final int w, final int h)
+	private final int w, h;
+	
+	private int level;
+	
+	public GamePanel(final int w, final int h, int level)
 	{
 		super();
 		
 		this.w = w;
-		this.h = h;
+		this.h = h;		
 		
-		
+		this.level = level;
 		
 		//player is always hxw 30x50
 		player = new Player(235,650);
+		Spaceship s;
 		
-		Spaceship s = new Spaceship(50,50);
-		
-		enemies.put(s.getShipID(),s);
-		s = new Spaceship(100,200);
-		enemies.put(s.getShipID(),s);
+		for(int i=0;i<level;i++)
+		{
+			s = new Spaceship(40,40*(i+1));
+			enemies.put(s.getShipID(),s);
+		}
 	
 		addKeyListener(new KeyAdapter()
 		{
@@ -75,9 +80,9 @@ public class GamePanel extends JPanel
 		);
 	}
 	
-	public void move(GamePanel gamePanel)
+	public boolean move(GamePanel gamePanel)
 	  {
-		Projectile temp;
+		Projectile p;
 		
 		//player movement is handled by the KeyListener/Handler
 		
@@ -86,23 +91,21 @@ public class GamePanel extends JPanel
 		{
 			for(Integer i : projectiles.keySet())
 			{
-				temp = projectiles.get(i);
+				p = projectiles.get(i);
 				
 				//move projectiles, also flags projectiles for being out of range
-				temp.move(gamePanel);
-				
-				temp.checkCollision(new ArrayList<Spaceship>(enemies.values()),player);
+				p.move(gamePanel,new ArrayList<Spaceship>(enemies.values()),player);
 				
 				//make note of outOfRange projectiles
-				if(temp.getIsOutOfRange())
-					outOfRangeProjectiles.add(i);
-				
+				if(p.getIsInvalid())
+					invalidProjectiles.add(i);
+						
 			}
 		}
 		
 		
 		//remove flagged projectiles
-		for(int i : outOfRangeProjectiles)
+		for(int i : invalidProjectiles)
 		{
 			if(i > 0 && projectiles.containsKey(i))
 			{
@@ -119,25 +122,42 @@ public class GamePanel extends JPanel
 		}
 		
 		//clear all flags
-		outOfRangeProjectiles.clear();
-		  
+		invalidProjectiles.clear();		
+		
+		
+		for(Spaceship s : enemies.values())
+		{
+			//assume all ships are destroyed
+			allEnemiesDestroyed = s.getIsDestroyed();
+			
+			if(allEnemiesDestroyed)
+				continue;
+			else
+				break;
+		}
+		
+		if(allEnemiesDestroyed)
+			return allEnemiesDestroyed;
+		
 		//move enemies
 	    for(Spaceship s : enemies.values())
 	    {
-	   		s.move(w,h);
-	   		
-	   		if(!s.getHasProjectile())
+	   		if(!s.getIsDestroyed())
 	   		{
-	   			Projectile p = s.fire();
-	   			
-	   			projectiles.put(s.getShipID(),p);
-	   		}
+		    	s.move(w,h);
+		   		
+		   		if(!s.getHasProjectile())
+		   		{
+		   			p = s.fire();
+		   			
+		   			projectiles.put(s.getShipID(),p);
+		   		}
+		   	}
 	    }
-	    
-	 
-	  		
-	    
+	    	  	
 	    repaint();
+	    
+	    return allEnemiesDestroyed;
 	  }
 	
 	public void paintComponent(Graphics g)
@@ -148,28 +168,37 @@ public class GamePanel extends JPanel
         //paint background
         g.fillRect(0, 0, getWidth(), getHeight());
         
-        //draw Scorebar
-        
+        //update score
+        scorebar.addScore(player.getScore());
+        //reset player score
+        player.setScore(0);
+        //draw scorebar
         scorebar.drawScorebar(g);
         
-        
-        //draw projectiles
-        if(!projectiles.isEmpty())
-           	for(Projectile p : projectiles.values())
-		        p.draw(g);
-        
-        //Draw Enemies
-        for(Spaceship ship : enemies.values())
+        if(!player.getIsDestroyed())
         {
-        	g.setColor(ship.getColor());
-            g.fillRect(ship.getXCoord(), ship.getYCoord(),
-                ship.getSSWidth(), ship.getSSHeight());
+	        //draw projectiles
+	        if(!projectiles.isEmpty())
+	           	for(Projectile p : projectiles.values())
+			        p.draw(g);
+	        
+	        //Draw Enemies
+	        for(Spaceship ship : enemies.values())
+	        {
+	        	if(!ship.getIsDestroyed())
+	        	{
+	        		g.setColor(ship.getColor());
+	        		g.fillRect(ship.getXCoord(), ship.getYCoord(),
+	        				   ship.getSSWidth(), ship.getSSHeight());
+	        	}
+	        }
+	        
+	        //Draw Player
+	        g.setColor(player.getColor());
+	        g.fillRect(player.getXCoord(),player.getYCoord(),
+	        		   player.getSSWidth(),player.getSSHeight());
         }
-        
-        //Draw Player
-        g.setColor(player.getColor());
-        g.fillRect(player.getXCoord(),player.getYCoord(),
-        		   player.getSSWidth(),player.getSSHeight());
-        
+        else
+        	scorebar.gameOver(g);
      }
 }

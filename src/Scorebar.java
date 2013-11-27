@@ -15,8 +15,6 @@ public class Scorebar extends JPanel
 	private String scoreString = "0";
 	private String levelString = "1";
 	
-	private int	scoreValueWidth,
-				levelValueWidth;
 	
 	/**
 	 * default constructor
@@ -33,16 +31,29 @@ public class Scorebar extends JPanel
 	
 	public void drawScorebar(Graphics g)
 	{
-		
-		FontMetrics fm = g.getFontMetrics();
-		
 		g.setColor(Color.white);
         g.drawString(SCORE, 10, 600);
         g.drawString(LEVEL, 10, 615);
         g.drawString(scoreString, 10+SCORE_WIDTH,600);
         g.drawString(levelString, 10+LEVEL_WIDTH,615);
 	}
+	public void gameOver(Graphics g)
+	{
+		g.setColor(Color.white);
+		g.drawString("You have died!",250, 400);
+	}
 	
+	/**
+	 * the addScore method adds an amount, score, to 
+	 * the existing scoreValue.
+	 * 
+	 * @param score to be added to scoreValue
+	 */
+	public void addScore(int score)
+	{
+		this.scoreValue += score;
+		this.scoreString = Integer.toString(scoreValue);
+	}
 	/**
 	 * the setScore method sets score
 	 * @param score
@@ -52,6 +63,10 @@ public class Scorebar extends JPanel
 		this.scoreValue = score;
 		this.scoreString = Integer.toString(scoreValue);
 	}
+	/**
+	 * the setLevelValue method sets levelValue
+	 * @param level
+	 */
 	public void setLevelValue(int level)
 	{
 		this.levelValue = level;
