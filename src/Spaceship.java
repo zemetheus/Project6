@@ -288,4 +288,9 @@ public class Spaceship extends JPanel
 	{
 		return hasProjectile;
 	}
+	
+	public static void resetID()
+	{
+		ID = 1; //player always has 0
+	}
 }

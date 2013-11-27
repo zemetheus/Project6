@@ -20,26 +20,25 @@ public class GamePanel extends JPanel
 	
 	private final int w, h;
 	
-	private int level;
+	private int level = 1,
+				gameState;
 	
-	public GamePanel(final int w, final int h, int level)
+	public GamePanel(final int w, final int h)
 	{
 		super();
 		
 		this.w = w;
 		this.h = h;		
 		
-		this.level = level;
+		scorebar.setLevelValue(level);
 		
 		//player is always hxw 30x50
 		player = new Player(235,650);
 		Spaceship s;
 		
-		for(int i=0;i<level;i++)
-		{
-			s = new Spaceship(40,40*(i+1));
-			enemies.put(s.getShipID(),s);
-		}
+		s = new Spaceship(40,40);
+		enemies.put(s.getShipID(),s);
+		
 	
 		addKeyListener(new KeyAdapter()
 		{
@@ -80,10 +79,10 @@ public class GamePanel extends JPanel
 		);
 	}
 	
-	public boolean move(GamePanel gamePanel)
+	public int move(GamePanel gamePanel)
 	  {
 		Projectile p;
-		
+		Spaceship ss;
 		//player movement is handled by the KeyListener/Handler
 		
 		//move projectiles
@@ -137,7 +136,30 @@ public class GamePanel extends JPanel
 		}
 		
 		if(allEnemiesDestroyed)
-			return allEnemiesDestroyed;
+		{
+			if(level == 5)
+			{
+				gameState = 2; //game over menu
+				return gameState;
+			}
+			else
+			{
+				enemies.clear();
+				Spaceship.resetID();
+				
+				player.setXCoord(235);
+				player.setYCoord(650);
+				
+				level++;
+				scorebar.setLevelValue(level);
+				
+				for(int i=0;i<level;i++)
+				{
+					ss = new Spaceship(40,40*(i+1));
+					enemies.put(ss.getShipID(),ss);
+				}
+			}
+		}
 		
 		//move enemies
 	    for(Spaceship s : enemies.values())
@@ -157,48 +179,150 @@ public class GamePanel extends JPanel
 	    	  	
 	    repaint();
 	    
-	    return allEnemiesDestroyed;
+	    return gameState = 1; //continue game.move();
+	      
 	  }
+	
+	public int startMenu(final GamePanel gamePanel)
+	{
+		
+		addKeyListener(new KeyAdapter()
+		{
+			public void keyPressed(KeyEvent e)
+			{
+				switch(e.getKeyCode())
+				{
+					case KeyEvent.VK_ENTER:
+					{
+						if(gamePanel.getGameState() == 0)
+							gamePanel.setGameState(1);
+						break;
+					}
+					case KeyEvent.VK_ESCAPE:
+					{
+						System.exit(0);
+					}
+					default:
+					{
+						break;
+					}
+				}
+			}
+		}
+		);
+		
+		repaint();
+		
+		return gameState;
+		
+	}
+	
+	public int victoryScreen(GamePanel gamePanel)
+	{
+		repaint();
+		
+		return gameState;
+	}
 	
 	public void paintComponent(Graphics g)
   	{
-  		super.paintComponent(g);
-  		//set color black
+		super.paintComponent(g);
+  		
+		//set color black
         g.setColor(Color.black);
         //paint background
         g.fillRect(0, 0, getWidth(), getHeight());
         
-        //update score
-        scorebar.addScore(player.getScore());
-        //reset player score
-        player.setScore(0);
-        //draw scorebar
-        scorebar.drawScorebar(g);
-        
-        if(!player.getIsDestroyed())
+        switch(gameState)
         {
-	        //draw projectiles
-	        if(!projectiles.isEmpty())
-	           	for(Projectile p : projectiles.values())
-			        p.draw(g);
-	        
-	        //Draw Enemies
-	        for(Spaceship ship : enemies.values())
+	        case 0:
 	        {
-	        	if(!ship.getIsDestroyed())
-	        	{
-	        		g.setColor(ship.getColor());
-	        		g.fillRect(ship.getXCoord(), ship.getYCoord(),
-	        				   ship.getSSWidth(), ship.getSSHeight());
-	        	}
+	        	printStartMenu(g);
+	        	
+	        	break;
 	        }
-	        
-	        //Draw Player
-	        g.setColor(player.getColor());
-	        g.fillRect(player.getXCoord(),player.getYCoord(),
-	        		   player.getSSWidth(),player.getSSHeight());
+	        case 1:
+	        {
+	        	//update score
+		        scorebar.addScore(player.getScore());
+		        //reset player score
+		        player.setScore(0);
+		        //draw scorebar
+		        scorebar.drawScorebar(g);
+		        
+		        if(!player.getIsDestroyed())
+		        {
+			        //draw projectiles
+			        if(!projectiles.isEmpty())
+			           	for(Projectile p : projectiles.values())
+					        p.draw(g);
+			        
+			        //Draw Enemies
+			        for(Spaceship ship : enemies.values())
+			        {
+			        	if(!ship.getIsDestroyed())
+			        	{
+			        		g.setColor(ship.getColor());
+			        		g.fillRect(ship.getXCoord(), ship.getYCoord(),
+			        				   ship.getSSWidth(), ship.getSSHeight());
+			        	}
+			        }
+			        
+			        //Draw Player
+			        g.setColor(player.getColor());
+			        g.fillRect(player.getXCoord(),player.getYCoord(),
+			        		   player.getSSWidth(),player.getSSHeight());
+		        }
+		        else
+		        	scorebar.gameOver(g);
+		        
+		        break;
+	        }
+	        case 2:
+	        {
+	        	g.setColor(Color.white);
+	        	centerString("YOU HAVE DEFEATED THE ALIENS",g,10);
+	    		centerString("ALL HAIL THE HERO OF THE GALAXY",g,15);
+	    		break;
+	        }
+	        default:
+	        {
+	        	System.out.println("gameState paint error");
+	        	System.exit(1);
+	        }
         }
-        else
-        	scorebar.gameOver(g);
-     }
+    }
+	public void printStartMenu(Graphics g)
+	{
+		g.setColor(Color.white);
+    	
+    	centerString("Welcome to",g,0);
+    	centerString("ALIEN INVADERS",g,1);
+    	
+    	g.drawLine(201,125,295,125);
+    	
+    	centerString("ENTER - start the game",g,4);
+    	centerString("ESCAPE - exit the game",g,5);
+    	
+    	centerString("LEFT ARROW - move left",g,6);
+    	centerString("RIGHT ARROW - move right",g,7);
+    	centerString("SPACEBAR - FIRE ZE MISSILE!",g,8);
+	}
+	public void centerString(String msg, Graphics g, int nLine)
+	{
+		int center, length;
+		FontMetrics fm = g.getFontMetrics();
+		
+		length = fm.stringWidth(msg);
+    	center = (w - length) / 2;
+    	g.drawString(msg, center, 100+(nLine * 20));
+	}
+	public void setGameState(int gameState)
+	{
+		this.gameState = gameState;
+	}
+	public int getGameState()
+	{
+		return gameState;
+	}
 }

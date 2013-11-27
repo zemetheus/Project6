@@ -19,19 +19,41 @@ public class Game extends JFrame
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     	setLayout(new BorderLayout());
-    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT,2);
+    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT);
     	add(gamePanel);
     	center(this);
     	setVisible(true);
     	gamePanel.setFocusable(true);
 
-    	boolean gameOver = false;
+    	int gameState = 0;
     	
     	//main game loop, close to halt
-    	while(!gameOver)
+    	while(true)
     	{
     		pause();
-    		gameOver = gamePanel.move(gamePanel);
+    		switch(gameState)
+    		{
+	    		case 0:
+	    		{
+	    			gameState = gamePanel.startMenu(gamePanel);
+	    			break;
+	    		}
+	    		case 1:
+	    		{
+	    			gameState = gamePanel.move(gamePanel);
+	    			break;
+	    		}
+	    		case 2:
+	    		{
+	    			gameState = gamePanel.victoryScreen(gamePanel);
+	    			break;
+	    		}
+	    		default:
+	    		{
+	    			System.out.println("gameState error");
+	    			System.exit(1);
+	    		}
+    		}
     	}
     }
 	
