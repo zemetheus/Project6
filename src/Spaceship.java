@@ -1,20 +1,8 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class Spaceship extends JPanel
+public class Spaceship extends SpaceObject
 {
-	private static int ID = 0;
-	private int shipID;
-	
-	
-	private int xCoord,
-				yCoord,
-				ssHeight,
-				ssWidth,
-				xVel,
-				yVel;
-	private Color color;
-	
 	private boolean isDestroyed = false;
 	private boolean hasProjectile = false;
 	
@@ -23,75 +11,66 @@ public class Spaceship extends JPanel
 	 */
 	public Spaceship(){}
 	
+	/**
+	 * calls parent constructor- (x,y) for initial position
+	 * @param xCoord
+	 * @param yCoord
+	 */
 	public Spaceship(int xCoord, int yCoord)
 	{
-		this.xCoord = xCoord;
-		this.yCoord = yCoord;
-		this.ssHeight = setStartHeight();
-		this.ssWidth = setStartWidth();
-		this.xVel = setStartXVel();
-		this.yVel = 0;
-		this.color = setStartColor();
-		
-		this.shipID = ID;
-		ID++;
+		super(xCoord,yCoord);
 	}
-	
-	public void move(int xBound, int yBound)
+	/**
+	 * fire method instantiates and returns a new projectile at center of 
+	 * the firing entity's current x center, and top or bottom depending on
+	 * isPlayerProjectile; it also ensures that this specific entity
+	 * hasProjectile.
+	 * 
+	 * @param isPlayerProjectile boolean for denoting whether or not isPlayerProjectile
+	 * @return Projectile p
+	 */
+	public Projectile fire(boolean isPlayerProjectile)
 	{
-		xCoord += xVel;
-		yCoord += yVel;
+		int xCoord = super.getXCoord(),
+			yCoord = super.getYCoord(),
+			ssWidth = super.getSOWidth(),
+			soHeight = super.getSOHeight(),		
+			centerX = xCoord + ssWidth/2,
+		    bottomY = isPlayerProjectile ? yCoord : yCoord + soHeight;
 		
-		checkBounds(xBound,yBound);
-	}
-	
-	public void checkBounds(int w, int h)
-	{
-		if(xCoord > (w - ssWidth))
-		{
-			xVel *= -1;
-		    xCoord = w - ssWidth;
-		}
-		if(xCoord < 0)
-		{
-			xVel *= -1;
-			xCoord = 0;
-		}
-		if(yCoord > (h-ssHeight))
-		{
-			yVel *= -1;
-			yCoord = h - ssHeight;
-		}
-		if(yCoord < 0)
-		{
-			yVel *= -1;
-			yCoord = 0;
-		}
-	}
-	
-	public Projectile fire()
-	{
-		int centerX = xCoord + ssWidth/2,
-		    bottomY = yCoord + ssHeight;
-		
-		Projectile p = new Projectile(centerX,bottomY,false);
+		Projectile p = new Projectile(centerX,bottomY,isPlayerProjectile);
 		
 		this.hasProjectile = true;
 		
 		return p;
 	}
-	
+	/**
+	 * the destroy method destroys this ship by setting isDestroyed = true
+	 * and adds a score based on its size and speed.
+	 * @return
+	 */
 	public int destroy()
 	{
 		this.isDestroyed = true;
 		
 		int score;
 		
-		score = Math.abs(xVel);
+		score = Math.abs(super.getXVel());
+		
+		score *= 1 + (55 - super.getSOWidth())/55;
 		
 		return score;
 	}
-	
+	/**
+	 * draw method void-returning method draws the spaceship
+	 * @param g
+	 */
+	public void draw(Graphics g)
+	{
+		g.setColor(super.getColor());
+		g.fillRect(super.getXCoord(), super.getYCoord(),
+				   super.getSOWidth(), super.getSOHeight());
+	}
 	/**
 	 * setIsDestroyed method sets isDestroyed
 	 * @param isDestroyed
@@ -109,173 +88,8 @@ public class Spaceship extends JPanel
 		return isDestroyed;
 	}
 	/**
-	 * setShipID sets projectileID
-	 * @param projectileID
+	 * setHasProjectile method sets hasProjectile
 	 */
-	public void setShipID(int projectileID)
-	{
-		this.shipID = projectileID;
-	}
-	/**
-	 * getShipID method returns shipID
-	 * @return
-	 */
-	public int getShipID()
-	{
-		return shipID;
-	}
-	/**
-	 * setXCoord method sets xCoord
-	 * @param xCoord
-	 */
-	public void setXCoord(int xCoord)
-	{
-		this.xCoord = xCoord;
-	}
-	/**
-	 * getXCoord method returns xCoord
-	 * @return
-	 */
-	public int getXCoord()
-	{
-		return xCoord;
-	}
-	/**
-	 * setYCoord method sets yCoord
-	 * @param yCoord
-	 */
-	public void setYCoord(int yCoord)
-	{
-		this.yCoord = yCoord;
-	}
-	/**
-	 * getYCoord method returns yCoord
-	 * @return
-	 */
-	public int getYCoord()
-	{
-		return yCoord;
-	}
-	/**
-	 * the setStartHeight method sets a pseudorandom height for the spaceship
-	 * @return height 
-	 */
-	public int setStartHeight()
-	{
-		int height;
-		
-		height = 30;
-		
-		return height;
-	}
-	/**
-	 * setSSHeight method sets ssHeight
-	 * @param height
-	 */
-	public void setSSHeight(int height)
-	{
-		this.ssHeight = height;
-	}
-	/**
-	 * getSSHeight method returns ssHeight
-	 * @return ssHeight
-	 */
-	public int getSSHeight()
-	{
-		return ssHeight;
-	}
-	/**
-	 * the setStartWidth method sets a pseudorandom width for the spaceship
-	 * @return
-	 */
-	public int setStartWidth()
-	{
-		int width;
-		
-		width = 50;
-		
-		return width;
-	}
-	/**
-	 * setSSWidth sets ssWidth
-	 * @param ssWidth
-	 */
-	public void setSSWidth(int ssWidth)
-	{
-		this.ssWidth = ssWidth;
-	}
-	/**
-	 * getSSWidth method returns ssWidth
-	 * @return ssWidth
-	 */
-	public int getSSWidth()
-	{
-		return ssWidth;
-	}
-	/**
-	 * setStartXVel method sets a random x component velocity between 1 and 11.
-	 * @return
-	 */
-	public int setStartXVel()
-	{
-		int vel = (int)(1 + Math.random() * 10);
-		
-		return vel;
-	}
-	/**
-	 * setXVel method sets xVel
-	 * @param xVel
-	 */
-	public void setXVel(int xVel)
-	{
-		this.xVel = xVel;
-	}
-	/**
-	 * getXVel method returns xVel
-	 * @return xVel
-	 */
-	public int getXVel()
-	{
-		return xVel;
-	}
-	//public int setStartYVel(){}
-	public void setYVel(int yVel)
-	{
-		this.yVel = yVel;
-	}
-	public int getYVel()
-	{
-		return yVel;
-	}
-	/**
-	 * the setStartColor sets a random color to the spaceship
-	 * @return Color color
-	 */
-	public Color setStartColor()
-	{
-		int red = (int) (Math.random() * 256);
-	    int green = (int) (Math.random() * 256);
-	    int blue = (int) (Math.random() * 256);
-	    Color ranColor = new Color(red, green, blue);
-	    
-	    return ranColor;
-	}
-	/**
-	 * setColor method sets this.color
-	 * @param color
-	 */
-	public void setColor(Color color)
-	{
-		this.color = color;
-	}
-	/**
-	 * getColor method return this.color
-	 * @return color
-	 */
-	public Color getColor()
-	{
-		return color;
-	}
 	public void setHasProjectile(boolean hasProjectile)
 	{
 		this.hasProjectile = hasProjectile;
@@ -287,10 +101,5 @@ public class Spaceship extends JPanel
 	public boolean getHasProjectile()
 	{
 		return hasProjectile;
-	}
-	
-	public static void resetID()
-	{
-		ID = 1; //player always has 0
 	}
 }

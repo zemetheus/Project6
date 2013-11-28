@@ -24,9 +24,37 @@ public class Scorebar extends JPanel
 		
 	}
 	
-	public void paintComponent(Graphics g)
+	public void drawStartMenu(Graphics g)
 	{
-		super.paintComponent(g);
+		g.setColor(Color.white);
+    	
+    	centerString("Welcome to",g,0);
+    	centerString("ALIEN INVADERS",g,1);
+    	
+    	g.drawLine(201,125,295,125);
+    	
+    	centerString("ENTER - start the game",g,4);
+    	centerString("ESCAPE - exit the game",g,5);
+    	
+    	centerString("LEFT ARROW - move left",g,6);
+    	centerString("RIGHT ARROW - move right",g,7);
+    	centerString("SPACEBAR - FIRE ZE MISSILE!",g,8);
+	}
+	public void drawVictoryScreen(Graphics g,int highlight)
+	{
+		g.setColor(Color.white);
+    	centerString("YOU HAVE DEFEATED THE ALIENS",g,10);
+		centerString("ALL HAIL THE HERO OF THE GALAXY",g,15);
+	}
+	
+	public void centerString(String msg, Graphics g, int nLine)
+	{
+		int center, length;
+		FontMetrics fm = g.getFontMetrics();
+		
+		length = fm.stringWidth(msg);
+    	center = (500 - length) / 2;
+    	g.drawString(msg, center, 100+(nLine * 20));
 	}
 	
 	public void drawScorebar(Graphics g)
@@ -37,21 +65,45 @@ public class Scorebar extends JPanel
         g.drawString(scoreString, 10+SCORE_WIDTH,600);
         g.drawString(levelString, 10+LEVEL_WIDTH,615);
 	}
-	public void gameOver(Graphics g)
+	public void drawGameOverScreen(Graphics g,int highlight)
 	{
 		g.setColor(Color.white);
-		g.drawString("You have died!",250, 400);
+		centerString("You have died!",g, 10);
+		g.setColor(Color.gray);
+		switch(highlight)
+		{
+			case 0:
+			{
+				g.fillRect(205,365,35,20);
+				break;
+			}
+			case 1:
+			{
+				g.fillRect(260,365,35,20);
+				break;
+			}
+			default:
+			{
+				System.out.println("Highlight Replay Error");
+				System.exit(1);
+			}
+		}
+		drawReplay(g);
 	}
-	
-	/**
-	 * the addScore method adds an amount, score, to 
-	 * the existing scoreValue.
-	 * 
-	 * @param score to be added to scoreValue
-	 */
-	public void addScore(int score)
+	public void drawReplay(Graphics g)
 	{
-		this.scoreValue += score;
+		g.setColor(Color.white);
+		centerString("Replay?", g, 12);
+		centerString("YES            NO",g,14);
+	}
+	/**
+	 * the setScore method sets score
+	 * 
+	 * @param score
+	 */
+	public void setScore(int score)
+	{
+		this.scoreValue = score;
 		this.scoreString = Integer.toString(scoreValue);
 	}
 	/**

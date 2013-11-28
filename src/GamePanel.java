@@ -16,12 +16,15 @@ public class GamePanel extends JPanel
 	
 	private Player player;
 	
+	private Upgrade upgrade = null;
+	
 	private boolean allEnemiesDestroyed = false;
 	
 	private final int w, h;
 	
 	private int level = 1,
-				gameState;
+				gameState,
+				highlight;
 	
 	public GamePanel(final int w, final int h)
 	{
@@ -37,7 +40,7 @@ public class GamePanel extends JPanel
 		Spaceship s;
 		
 		s = new Spaceship(40,40);
-		enemies.put(s.getShipID(),s);
+		enemies.put(s.getEntityID(),s);
 		
 	
 		addKeyListener(new KeyAdapter()
@@ -48,12 +51,18 @@ public class GamePanel extends JPanel
 				{
 					case KeyEvent.VK_LEFT:
 					{
+						if(gameState == 2 || gameState == 3)
+							highlight = 0;
+						
 						player.setXVel(-6);
 						player.move(w,h);
 						break;
 					}
 					case KeyEvent.VK_RIGHT:
 					{
+						if(gameState == 2 || gameState == 3)
+							highlight = 1;
+		
 						player.setXVel(6);
 						player.move(w,h);
 						break;
@@ -61,7 +70,7 @@ public class GamePanel extends JPanel
 					case KeyEvent.VK_SPACE:
 					{
 						if(!player.getHasProjectile())
-							projectiles.put(player.getShipID(),player.fire());
+							projectiles.put(player.getEntityID(),player.fire(true));
 						
 						break;
 					}
@@ -101,7 +110,13 @@ public class GamePanel extends JPanel
 						
 			}
 		}
+		if(upgrade != null)
+		{
+			upgrade.move(w,h,player);
 		
+			if(upgrade.getIsClaimed())
+				upgrade = null;
+		}
 		
 		//remove flagged projectiles
 		for(int i : invalidProjectiles)
@@ -135,17 +150,25 @@ public class GamePanel extends JPanel
 				break;
 		}
 		
+		if(player.getIsDestroyed())
+		{
+			gameState = 3; //game loss menu
+			return gameState;
+		}
+		
 		if(allEnemiesDestroyed)
 		{
 			if(level == 5)
 			{
-				gameState = 2; //game over menu
+				gameState = 2; //game Victory menu
 				return gameState;
 			}
 			else
 			{
 				enemies.clear();
 				Spaceship.resetID();
+				
+				upgrade = new Upgrade();
 				
 				player.setXCoord(235);
 				player.setYCoord(650);
@@ -156,7 +179,7 @@ public class GamePanel extends JPanel
 				for(int i=0;i<level;i++)
 				{
 					ss = new Spaceship(40,40*(i+1));
-					enemies.put(ss.getShipID(),ss);
+					enemies.put(ss.getEntityID(),ss);
 				}
 			}
 		}
@@ -170,9 +193,9 @@ public class GamePanel extends JPanel
 		   		
 		   		if(!s.getHasProjectile())
 		   		{
-		   			p = s.fire();
+		   			p = s.fire(false);
 		   			
-		   			projectiles.put(s.getShipID(),p);
+		   			projectiles.put(s.getEntityID(),p);
 		   		}
 		   	}
 	    }
@@ -196,6 +219,28 @@ public class GamePanel extends JPanel
 					{
 						if(gamePanel.getGameState() == 0)
 							gamePanel.setGameState(1);
+						//if(gamePanel.getGameState() == 2 ||
+						//   gamePanel.getGameState() == 3)
+						{
+							switch(highlight)
+							{
+								case 0:
+								{
+									//gamePanel.setGameState(99);
+									break;
+								}
+								case 1:
+								{
+									System.exit(0);
+									break;
+								}
+								default:
+								{
+									System.out.println("Highlight Enter Error");
+									System.exit(1);
+								}
+							}
+						}
 						break;
 					}
 					case KeyEvent.VK_ESCAPE:
@@ -224,6 +269,13 @@ public class GamePanel extends JPanel
 		return gameState;
 	}
 	
+	public int lossScreen(GamePanel gamePanel)
+	{
+		repaint();
+		
+		return gameState;
+	}
+	
 	public void paintComponent(Graphics g)
   	{
 		super.paintComponent(g);
@@ -237,53 +289,50 @@ public class GamePanel extends JPanel
         {
 	        case 0:
 	        {
-	        	printStartMenu(g);
-	        	
+	        	scorebar.drawStartMenu(g);
 	        	break;
 	        }
 	        case 1:
 	        {
 	        	//update score
-		        scorebar.addScore(player.getScore());
-		        //reset player score
-		        player.setScore(0);
+		        scorebar.setScore(player.getScore());
 		        //draw scorebar
 		        scorebar.drawScorebar(g);
 		        
-		        if(!player.getIsDestroyed())
-		        {
-			        //draw projectiles
-			        if(!projectiles.isEmpty())
-			           	for(Projectile p : projectiles.values())
-					        p.draw(g);
-			        
-			        //Draw Enemies
-			        for(Spaceship ship : enemies.values())
-			        {
-			        	if(!ship.getIsDestroyed())
-			        	{
-			        		g.setColor(ship.getColor());
-			        		g.fillRect(ship.getXCoord(), ship.getYCoord(),
-			        				   ship.getSSWidth(), ship.getSSHeight());
-			        	}
-			        }
-			        
-			        //Draw Player
-			        g.setColor(player.getColor());
-			        g.fillRect(player.getXCoord(),player.getYCoord(),
-			        		   player.getSSWidth(),player.getSSHeight());
-		        }
-		        else
-		        	scorebar.gameOver(g);
+		        
+			    //draw projectiles
+			    if(!projectiles.isEmpty())
+			    	for(Projectile p : projectiles.values())
+			    	    p.draw(g);
+			    
+			    //draw upgrade
+			    if(upgrade != null && !upgrade.getIsClaimed())
+			    	upgrade.draw(g);
+			    
+			    //Draw Enemies
+			    for(Spaceship ship : enemies.values())
+			    	if(!ship.getIsDestroyed())
+				        ship.draw(g);
+			       
+			    //Draw Player
+			    player.draw(g);
 		        
 		        break;
 	        }
 	        case 2:
 	        {
-	        	g.setColor(Color.white);
-	        	centerString("YOU HAVE DEFEATED THE ALIENS",g,10);
-	    		centerString("ALL HAIL THE HERO OF THE GALAXY",g,15);
+	        	scorebar.drawVictoryScreen(g,highlight);
 	    		break;
+	        }
+	        case 3:
+	        {
+	        	scorebar.drawGameOverScreen(g,highlight);
+	        	break;
+	        }
+	        case 99:
+	        {
+	        	//restart game code
+	        	break;
 	        }
 	        default:
 	        {
@@ -292,31 +341,7 @@ public class GamePanel extends JPanel
 	        }
         }
     }
-	public void printStartMenu(Graphics g)
-	{
-		g.setColor(Color.white);
-    	
-    	centerString("Welcome to",g,0);
-    	centerString("ALIEN INVADERS",g,1);
-    	
-    	g.drawLine(201,125,295,125);
-    	
-    	centerString("ENTER - start the game",g,4);
-    	centerString("ESCAPE - exit the game",g,5);
-    	
-    	centerString("LEFT ARROW - move left",g,6);
-    	centerString("RIGHT ARROW - move right",g,7);
-    	centerString("SPACEBAR - FIRE ZE MISSILE!",g,8);
-	}
-	public void centerString(String msg, Graphics g, int nLine)
-	{
-		int center, length;
-		FontMetrics fm = g.getFontMetrics();
-		
-		length = fm.stringWidth(msg);
-    	center = (w - length) / 2;
-    	g.drawString(msg, center, 100+(nLine * 20));
-	}
+	
 	public void setGameState(int gameState)
 	{
 		this.gameState = gameState;
