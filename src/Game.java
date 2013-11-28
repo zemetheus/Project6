@@ -8,52 +8,72 @@ public class Game extends JFrame
 	private static final int WINDOW_HEIGHT = 750;
 	
 	private GamePanel gamePanel;
-	
+	private boolean startNewGame = false; //needs to be false to start FIRST new game
 	
 	/**
      * Creates a new instance of Game
      */
-    public Game() {
-    	//frame name
-    	super("Alien Invaders");  
-    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    	setLayout(new BorderLayout());
-    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT);
-    	add(gamePanel);
-    	center(this);
-    	setVisible(true);
-    	gamePanel.setFocusable(true);
-
-    	int gameState = 0;
+    public Game()
+    {
+    	super("Alien Invaders");
     	
-    	//main game loop, close to halt
     	while(true)
     	{
-    		pause();
-    		switch(gameState)
-    		{
-	    		case 0:
+    		//frame name
+        	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        	setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        	setLayout(new BorderLayout());
+        	
+	    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT);
+	    	add(gamePanel);
+	    	center(this);
+	    	setVisible(true);
+	    	gamePanel.setFocusable(true);
+	
+	    	int gameState = 0;
+	    	gamePanel.setGameState(0);
+	    	
+	    	System.out.println("New Game Starting");
+	    	//reset startNewGame
+	    	startNewGame = false;
+	    	
+	    	//main game loop, close to halt
+	    	while(!startNewGame)
+	    	{
+	    		pause();
+	    		switch(gameState)
 	    		{
-	    			gameState = gamePanel.startMenu(gamePanel);
-	    			break;
+		    		case 0:
+		    		{
+		    			gameState = gamePanel.startMenu(gamePanel);
+		    			break;
+		    		}
+		    		case 1:
+		    		{
+		    			gameState = gamePanel.move(gamePanel);
+		    			break;
+		    		}
+		    		case 2:
+		    		{
+		    			gameState = gamePanel.victoryScreen(gamePanel);
+		    			break;
+		    		}
+		    		case 3:
+		    		{
+		    			gameState = gamePanel.lossScreen(gamePanel);
+		    			if(gameState == 99)
+		    				startNewGame = true;
+		    			break;
+		    		}
+		    		default:
+		    		{
+		    			System.out.println("gameState error");
+		    			System.exit(1);
+		    		}
 	    		}
-	    		case 1:
-	    		{
-	    			gameState = gamePanel.move(gamePanel);
-	    			break;
-	    		}
-	    		case 2:
-	    		{
-	    			gameState = gamePanel.victoryScreen(gamePanel);
-	    			break;
-	    		}
-	    		default:
-	    		{
-	    			System.out.println("gameState error");
-	    			System.exit(1);
-	    		}
-    		}
+	    		
+	    		
+	    	}
     	}
     }
 	

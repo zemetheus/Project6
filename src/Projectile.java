@@ -1,13 +1,23 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Projectile extends Spaceship
+public class Projectile extends SpaceObject
 {
-	private boolean isInvalid = false,
+	private boolean isInvalid,
 					isPlayerProjectile;
-	
+	/**
+	 * empty constructor
+	 */
 	public Projectile(){}
-	
+	/**
+	 * Main Constructor calls parent constructor (x,y) position;
+	 * sets immutable projectile speed (based on isPlayerProjectile),
+	 * and shape and color.
+	 * 
+	 * @param xCoord
+	 * @param yCoord
+	 * @param isPlayerProjectile
+	 */
 	public Projectile(int xCoord, int yCoord, 
 					  boolean isPlayerProjectile)
 	{
@@ -15,8 +25,8 @@ public class Projectile extends Spaceship
 		super(xCoord,yCoord);
 		
 		//Projectiles are always circles with radius 10; 
-		super.setSSWidth(10);
-		super.setSSHeight(10);
+		super.setSOWidth(10);
+		super.setSOHeight(10);
 		
 		//projectiles only move vertically.
 		super.setXVel(0);
@@ -30,15 +40,21 @@ public class Projectile extends Spaceship
 		super.setColor(new Color(255,255,255));
 		
 		this.isPlayerProjectile = isPlayerProjectile;
+		this.isInvalid = false;
 	}
 	
 	public void draw(Graphics g)
 	{
 		g.setColor(super.getColor());
     	g.fillOval(super.getXCoord()-5,super.getYCoord(),
-    			   super.getSSWidth(),super.getSSHeight());
+    			   super.getSOWidth(),super.getSOHeight());
 	}
-	
+	/**
+	 * move method moves the projectile vertically.
+	 * @param gp GamePanel gp for obtaining width.
+	 * @param ships ArrayList<Spaceship> containing all enemies' data
+	 * @param player Player object representing player
+	 */
 	public void move(GamePanel gp,ArrayList<Spaceship> ships,Player player)
 	{
 		int w = gp.getHeight(),
@@ -53,11 +69,16 @@ public class Projectile extends Spaceship
 		
 		checkCollision(ships,player);
 	}
-	
+	/**
+	 * checkCollision method takes the current list of ships (thus their positions)
+	 * and checks whether or not a projectile (treated as a point particle with
+	 * respect to its center) has collided with the hitbox.
+	 * 
+	 * @param ships ArrayList<Spaceship> holding current enemies
+	 * @param player Player object representing the player
+	 */
 	public void checkCollision(ArrayList<Spaceship> ships, Player player)
 	{
-		ships.add(player);
-		
 		//boundaries
 		int xBoundLow, xBoundHigh, yBoundLow, yBoundHigh;
 		
@@ -66,6 +87,11 @@ public class Projectile extends Spaceship
 		int xCenter = this.getXCenter(),
 			yCenter = this.getYCenter();
 		
+		/*
+		 * if it's a player projectile, check against the list of ships.
+		 * 
+		 * if it's an enemy projectile, check against the player data.
+		 */
 		if(isPlayerProjectile)
 		{
 			for(Spaceship s : ships)
@@ -74,9 +100,9 @@ public class Projectile extends Spaceship
 					continue;
 				
 				xBoundLow = s.getXCoord();
-				xBoundHigh = xBoundLow + s.getSSWidth();
+				xBoundHigh = xBoundLow + s.getSOWidth();
 				yBoundLow = s.getYCoord();
-				yBoundHigh = yBoundLow+s.getSSHeight();
+				yBoundHigh = yBoundLow+s.getSOHeight();
 				
 				if(xCenter > xBoundLow && xCenter < xBoundHigh &&
 				   yCenter > yBoundLow && yCenter < yBoundHigh)
@@ -89,9 +115,9 @@ public class Projectile extends Spaceship
 		else
 		{
 			xBoundLow = player.getXCoord();
-			xBoundHigh = xBoundLow + player.getSSWidth();
+			xBoundHigh = xBoundLow + player.getSOWidth();
 			yBoundLow = player.getYCoord();
-			yBoundHigh = yBoundLow + player.getSSHeight();
+			yBoundHigh = yBoundLow + player.getSOHeight();
 			
 			if(xCenter > xBoundLow && xCenter < xBoundHigh &&
 			   yCenter > yBoundLow && yCenter < yBoundHigh)
@@ -101,27 +127,50 @@ public class Projectile extends Spaceship
 			}
 		}
 	}
-	
+	/**
+	 * getXCenter method returns the current x coord of the center of the projectile
+	 * @return xCenter
+	 */
 	public int getXCenter()
 	{
 		return super.getXCoord() + 5;
 	}
+	/**
+	 * getYCenter method returns the current y coord of the center of the projectile
+	 * @return
+	 */
 	public int getYCenter()
 	{
 		return super.getYCoord() + 5;
 	}
+	/**
+	 * setIsPlayerProjectile method sets isPlayerProjectile
+	 * @param isPlayerProjectile
+	 */
 	public void setIsPlayerProjectile(boolean isPlayerProjectile)
 	{
 		this.isPlayerProjectile = isPlayerProjectile;
 	}
+	/**
+	 * getIsPlayerProjectile method returns isPlayerProjectile
+	 * @return
+	 */
 	public boolean getIsPlayerProjectile()
 	{
 		return isPlayerProjectile;
 	}
+	/**
+	 * setIsInvalid method sets isInvalid
+	 * @param isInvalid
+	 */
 	public void setIsInvalid(boolean isInvalid)
 	{
 		this.isInvalid = isInvalid;
 	}
+	/**
+	 * getIsInvalid method returns isInvalid
+	 * @return
+	 */
 	public boolean getIsInvalid()
 	{
 		return isInvalid;
