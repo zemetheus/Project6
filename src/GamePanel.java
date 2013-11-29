@@ -94,6 +94,10 @@ public class GamePanel extends JPanel
 		Spaceship ss;
 		//player movement is handled by the KeyListener/Handler
 		
+		//update scorebar
+		scorebar.updateScorebar(player.getScore(),player.getHasUpgrade());
+		
+		
 		//move projectiles
 		if(!projectiles.isEmpty())
 		{
@@ -294,9 +298,7 @@ public class GamePanel extends JPanel
 	        }
 	        case 1:
 	        {
-	        	//update score
-		        scorebar.setScore(player.getScore());
-		        //draw scorebar
+	        	//draw scorebar
 		        scorebar.drawScorebar(g);
 		        
 		        
