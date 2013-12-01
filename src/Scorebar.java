@@ -4,16 +4,21 @@ import javax.swing.*;
 
 public class Scorebar extends JPanel
 {
-	private static final String SCORE = "Score: ";
-	private static final String LEVEL = "Level: ";
-	private static final int SCORE_WIDTH = 38;
-	private static final int LEVEL_WIDTH = 35;
+	private static final String SCORE = "Score: ",
+								LEVEL = "Level: ",
+								LIVES = "Lives: ";
 	
-	private int scoreValue = 0;
-	private int levelValue = 1;
+	private static final int SCORE_WIDTH = 38,
+						     LEVEL_WIDTH = 35,
+						     LIVES_WIDTH = 35;
 	
-	private String scoreString = "0";
-	private String levelString = "1";
+	private int scoreValue = 0,
+				levelValue = 1,
+				livesValue = 0;
+	
+	private String scoreString = "0",
+				   levelString = "1",
+				   livesString = "0";
 	
 	
 	/**
@@ -23,7 +28,24 @@ public class Scorebar extends JPanel
 	{
 		
 	}
-	
+	/**
+	 * drawScorebar method draws the score bar.
+	 * @param g
+	 */
+	public void drawScorebar(Graphics g)
+	{
+		g.setColor(Color.white);
+        g.drawString(SCORE, 10, 600);
+        g.drawString(LEVEL, 10, 615);
+        g.drawString(LIVES, 10, 630);
+        g.drawString(scoreString, 10+SCORE_WIDTH,600);
+        g.drawString(levelString, 10+LEVEL_WIDTH,615);
+        g.drawString(livesString, 10+LIVES_WIDTH,630);
+	}
+	/**
+	 * drawStartMenu method draws the start menu
+	 * @param g
+	 */
 	public void drawStartMenu(Graphics g)
 	{
 		g.setColor(Color.white);
@@ -59,14 +81,6 @@ public class Scorebar extends JPanel
     	g.drawString(msg, center, 100+(nLine * 20));
 	}
 	
-	public void drawScorebar(Graphics g)
-	{
-		g.setColor(Color.white);
-        g.drawString(SCORE, 10, 600);
-        g.drawString(LEVEL, 10, 615);
-        g.drawString(scoreString, 10+SCORE_WIDTH,600);
-        g.drawString(levelString, 10+LEVEL_WIDTH,615);
-	}
 	public void drawGameOverScreen(Graphics g,int highlight)
 	{
 		g.setColor(Color.white);
@@ -102,6 +116,20 @@ public class Scorebar extends JPanel
 		g.setColor(Color.white);
 		centerString("Replay?", g, 12);
 		centerString("YES            NO",g,14);
+	}
+	
+	public void updateScorebar(int score, boolean hasUpgrade)
+	{
+		this.scoreValue = score;
+		
+		if(hasUpgrade)
+			addLivesValue(1);
+		
+	}
+	public void addLivesValue(int livesValue)
+	{
+		this.livesValue += livesValue;
+		this.livesString = Integer.toString(livesValue);
 	}
 	/**
 	 * the setScore method sets score
