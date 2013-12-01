@@ -9,7 +9,7 @@ public class Game extends JFrame
 	
 	private GamePanel gamePanel;
 	private boolean startNewGame = false; //needs to be false to start FIRST new game
-	
+	private int gameState = 0;
 	/**
      * Creates a new instance of Game
      */
@@ -17,66 +17,70 @@ public class Game extends JFrame
     {
     	super("Alien Invaders");
     	
-    	while(true)
-    	{
-    		//frame name
-        	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        	setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        	setLayout(new BorderLayout());
-        	
-	    	gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT);
-	    	add(gamePanel);
-	    	center(this);
-	    	setVisible(true);
-	    	gamePanel.setFocusable(true);
-	
-	    	int gameState = 0;
-	    	gamePanel.setGameState(0);
-	    	
-	    	System.out.println("New Game Starting");
-	    	//reset startNewGame
-	    	startNewGame = false;
-	    	
-	    	//main game loop, close to halt
-	    	while(!startNewGame)
+    	//frame name
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        setLayout(new BorderLayout());
+        
+	    gamePanel = new GamePanel(WINDOW_WIDTH,WINDOW_HEIGHT);
+	    add(gamePanel);
+	    center(this);
+	    setVisible(true);
+	    gamePanel.setFocusable(true);
+		
+	   	System.out.println("New Game Starting");
+	  	//reset startNewGame
+	   	startNewGame = false;
+	    gamePanel.setGameState(0);
+	   	
+	    //main game loop, close to halt
+	    while(!startNewGame)
+	    {
+	    	pause();
+	    	switch(gameState)
 	    	{
-	    		pause();
-	    		switch(gameState)
+		   		case 0:
+		   		{
+		   			gameState = gamePanel.startMenu(gamePanel);
+		   			break;
+		   		}
+		   		case 1:
+		   		{
+		   			gameState = gamePanel.move(gamePanel);
+		   			break;
+		   		}
+		   		case 2:
+		   		{
+		   			gameState = gamePanel.victoryScreen(gamePanel);
+		   			break;
+		   		}
+	    		case 3:
 	    		{
-		    		case 0:
-		    		{
-		    			gameState = gamePanel.startMenu(gamePanel);
-		    			break;
-		    		}
-		    		case 1:
-		    		{
-		    			gameState = gamePanel.move(gamePanel);
-		    			break;
-		    		}
-		    		case 2:
-		    		{
-		    			gameState = gamePanel.victoryScreen(gamePanel);
-		    			break;
-		    		}
-		    		case 3:
-		    		{
-		    			gameState = gamePanel.lossScreen(gamePanel);
-		    			if(gameState == 99)
-		    				startNewGame = true;
-		    			break;
-		    		}
-		    		default:
-		    		{
-		    			System.out.println("gameState error");
-		    			System.exit(1);
-		    		}
+	    			gameState = gamePanel.lossScreen(gamePanel);
+	    			break;
 	    		}
-	    		
-	    		
+	    		case 99:
+	    		{
+	    			startNewGame = true;
+	    			setVisible(false);
+	    			break;
+	    		}
+	    		default:
+	    		{
+	    			System.out.println(gameState);
+	    			System.out.println("gameState errorasdf");
+	    			System.exit(1);
+	    		}
 	    	}
     	}
-    }
+   	}
 	
+    public boolean getStartNewGame()
+    {
+    	return startNewGame;
+    }
+    
+    
 	/**
      * Pause command used to control the speed of animation.
      * Currently pauses for 10 ms. Use smaller values for faster animation and

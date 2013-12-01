@@ -30,6 +30,10 @@ public class GamePanel extends JPanel
 	{
 		super();
 		
+		//new game reset
+		SpaceObject.newGameResetID();
+		gameState = 0;
+		
 		this.w = w;
 		this.h = h;		
 		
@@ -114,8 +118,9 @@ public class GamePanel extends JPanel
 		{
 			upgrade.move(w,h,player);
 		
-			if(upgrade.getIsClaimed())
+			if(upgrade.getIsClaimed() || upgrade.getIsInvalid())
 				upgrade = null;
+			
 		}
 		
 		//remove flagged projectiles
@@ -158,7 +163,7 @@ public class GamePanel extends JPanel
 		
 		if(allEnemiesDestroyed)
 		{
-			if(level == 5)
+			if(level == 1)
 			{
 				gameState = 2; //game Victory menu
 				return gameState;
@@ -219,14 +224,14 @@ public class GamePanel extends JPanel
 					{
 						if(gamePanel.getGameState() == 0)
 							gamePanel.setGameState(1);
-						//if(gamePanel.getGameState() == 2 ||
-						//   gamePanel.getGameState() == 3)
+						if(gamePanel.getGameState() == 2 ||
+						   gamePanel.getGameState() == 3)
 						{
 							switch(highlight)
 							{
 								case 0:
 								{
-									//gamePanel.setGameState(99);
+									gamePanel.setGameState(99);
 									break;
 								}
 								case 1:

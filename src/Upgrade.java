@@ -5,7 +5,8 @@ public class Upgrade extends SpaceObject
 {
 	
 	private int upgradeType;
-	private boolean isClaimed = false;
+	private boolean isClaimed = false,
+					isInvalid = false;
 	
 	private Random r = new Random();
 	
@@ -23,7 +24,6 @@ public class Upgrade extends SpaceObject
 		super.setYVel(5);
 		
 		upgradeType = ((r.nextGaussian() * 10) > 5) ? 0 : 1;
-		
 	}
 	
 	public int setStartXCoord()
@@ -42,8 +42,17 @@ public class Upgrade extends SpaceObject
 	public void move(int xBound, int yBound, Player player)
 	{
 		checkCollision(player);
-		super.move(xBound, yBound);
 		
+		int yCoord = super.getYCoord(),
+			height = super.getSOHeight();
+		
+		
+		super.setYCoord(yCoord + super.getYVel());
+		
+		if(yCoord > (yBound-height))
+		{
+			isInvalid = true;
+		}
 		
 	}
 	
@@ -133,4 +142,21 @@ public class Upgrade extends SpaceObject
 	{
 		return isClaimed;
 	}
+	/**
+	 * setIsInvalid method sets boolean isInvalid
+	 * @param isInvalid
+	 */
+	public void setIsInvalid(boolean isInvalid)
+	{
+		this.isInvalid = isInvalid;
+	}
+	/**
+	 * getIsInvalid method returns boolean isInvalid
+	 * @return
+	 */
+	public boolean getIsInvalid()
+	{
+		return isInvalid;
+	}
+	
 }

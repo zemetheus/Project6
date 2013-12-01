@@ -235,6 +235,10 @@ public class SpaceObject extends JPanel
 	{
 		return color;
 	}
+	public static void newGameResetID()
+	{
+		ID = 0;
+	}
 	public static void resetID()
 	{
 		ID = 1; //player always has 0

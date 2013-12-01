@@ -44,7 +44,9 @@ public class Scorebar extends JPanel
 	{
 		g.setColor(Color.white);
     	centerString("YOU HAVE DEFEATED THE ALIENS",g,10);
-		centerString("ALL HAIL THE HERO OF THE GALAXY",g,15);
+		centerString("ALL HAIL THE HERO OF THE GALAXY",g,11);
+		drawHighlight(g,highlight);
+		drawReplay(g);
 	}
 	
 	public void centerString(String msg, Graphics g, int nLine)
@@ -70,6 +72,12 @@ public class Scorebar extends JPanel
 		g.setColor(Color.white);
 		centerString("You have died!",g, 10);
 		g.setColor(Color.gray);
+		drawHighlight(g,highlight);
+		drawReplay(g);
+	}
+	public void drawHighlight(Graphics g, int highlight)
+	{
+		g.setColor(Color.gray);
 		switch(highlight)
 		{
 			case 0:
@@ -88,7 +96,6 @@ public class Scorebar extends JPanel
 				System.exit(1);
 			}
 		}
-		drawReplay(g);
 	}
 	public void drawReplay(Graphics g)
 	{
