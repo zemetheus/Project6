@@ -61,6 +61,8 @@ public class Scorebar extends JPanel
     	centerString("LEFT ARROW - move left",g,6);
     	centerString("RIGHT ARROW - move right",g,7);
     	centerString("SPACEBAR - FIRE ZE MISSILE!",g,8);
+    	centerString("BLUE CIRCLE - Bonus Points!",g,11);
+    	centerString("GREEN CIRCLE - Bonus Life!",g,12);
 	}
 	public void drawVictoryScreen(Graphics g,int highlight)
 	{
@@ -118,17 +120,15 @@ public class Scorebar extends JPanel
 		centerString("YES            NO",g,14);
 	}
 	
-	public void updateScorebar(int score, boolean hasUpgrade)
+	public void updateScorebar(Player player)
 	{
-		this.scoreValue = score;
+		this.scoreValue = player.getScore();
 		
-		if(hasUpgrade)
-			addLivesValue(1);
-		
+		setLivesValue(player.getNLives());
 	}
-	public void addLivesValue(int livesValue)
+	public void setLivesValue(int livesValue)
 	{
-		this.livesValue += livesValue;
+		this.livesValue = livesValue;
 		this.livesString = Integer.toString(livesValue);
 	}
 	/**

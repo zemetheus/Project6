@@ -1,6 +1,7 @@
 public class Player extends Spaceship
 {
-	private int score = 0;
+	private int score = 0,
+				nLives = 0;
 	
 	private boolean hasUpgrade = false;
 	
@@ -29,6 +30,18 @@ public class Player extends Spaceship
 		super.setYVel(0);
 		
 		super.setColor(super.setStartColor());
+	}
+	public void addLives(int lives)
+	{
+		this.nLives += lives;
+	}
+	public void setNLives(int nLives)
+	{
+		this.nLives = nLives;
+	}
+	public int getNLives()
+	{
+		return nLives;
 	}
 	public void setHasUpgrade(boolean hasUpgrade)
 	{

@@ -80,7 +80,7 @@ public class Upgrade extends SpaceObject
 				case 1:
 				{
 					player.addScore(15);
-					player.setHasUpgrade(true);
+					player.addLives(1);
 					break;
 				}
 				default:

@@ -122,7 +122,11 @@ public class Projectile extends SpaceObject
 			if(xCenter > xBoundLow && xCenter < xBoundHigh &&
 			   yCenter > yBoundLow && yCenter < yBoundHigh)
 			{
-				player.setIsDestroyed(true);
+				if(player.getNLives() > 0)
+					player.addLives(-1);
+				else
+					player.setIsDestroyed(true);
+				
 				this.isInvalid = true;
 			}
 		}

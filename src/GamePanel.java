@@ -99,7 +99,7 @@ public class GamePanel extends JPanel
 		//player movement is handled by the KeyListener/Handler
 		
 		//update scorebar
-		scorebar.updateScorebar(player.getScore(),player.getHasUpgrade());
+		scorebar.updateScorebar(player);
 		
 		
 		//move projectiles
@@ -167,7 +167,7 @@ public class GamePanel extends JPanel
 		
 		if(allEnemiesDestroyed)
 		{
-			if(level == 1)
+			if(level == 5)
 			{
 				gameState = 2; //game Victory menu
 				return gameState;
