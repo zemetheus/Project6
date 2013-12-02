@@ -1,3 +1,20 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * This class describes a ball: how it moves, its size, and its color.
+     * 
+     * It's movement routines detect for collisions against other balls
+     * and outer boundaries. Further, if the flag isCollided is true,
+     * the ball is ignored until it is removed.
+     * 
+     * @author MOndrasek wrote this class 10 Aug 2012
+     * modified by Cogan Shimizu 11/30/2013
+     */
+
 import java.awt.*;
 
 import javax.swing.*;

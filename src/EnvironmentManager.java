@@ -1,10 +1,31 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * This static class verifies the integrity of the filesystem as well
+     * ensuring the existence of all necessary graphics resources.
+     * 
+     */
+
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class EnvironmentManager
 {
+	/**
+	 * setUpEnvironment method is the workhorse of this static class; it verifies
+	 * the integrity of the filesystem by ensuring that the Images directory
+	 * and requiredResources.txt file both exist, as well as checking
+	 * the actual present resources against those specified in the 
+	 * requiredResources.txt file.
+	 * 
+	 * The system will exit with a message upon failure to return true at any
+	 * point in the verification as these are non-recoverable problems.
+	 */
 	public static void setUpEnvironment()
 	{
 		//working directory
@@ -15,21 +36,25 @@ public class EnvironmentManager
 			 requiredResourcesFile = Paths.get(wdir,"requiredResources.txt");
 		
 		//required resources
-		ArrayList<String> resourcesRequired, resourcesAvailable;
+		ArrayList<String> requiredResources, availableResources;
 		
 		if(checkFile(images) && checkFile(requiredResourcesFile))
 		{
-			resourcesRequired = loadRequiredResourcesList(requiredResourcesFile);
-			resourcesAvailable = loadAvailableResourcesList(images);
+			requiredResources = getRequiredResourcesList(requiredResourcesFile);
+			availableResources = getAvailableResourcesList(images);
 			
-			for(String s : resourcesRequired)
+			for(String s : requiredResources)
 			{
-				if(!resourcesAvailable.contains(s));
+				if(availableResources.contains(s))
 				{
-					System.out.println("Resource Unavailable: "+s);
-					System.out.println("Please reverify installation");
+					System.out.println(s+" exists.");
+				}
+				else
+				{
+					System.out.println("Error");
 					System.exit(1);
 				}
+					
 			}
 			System.out.println("File System is intact.");
 		}
@@ -41,19 +66,27 @@ public class EnvironmentManager
 			System.exit(1);
 		}
 	}
-	
-	public static ArrayList<String> loadAvailableResourcesList(Path target)
+	/**
+	 * getAvailableResourcesList method obtains all resources present in the Images folder,
+	 * located at Path target;.
+	 * 
+	 * @param target Path object specifying location of the Images directory
+	 * @return list ArrayList<String> of available resources
+	 */
+	public static ArrayList<String> getAvailableResourcesList(Path target)
 	{
 		ArrayList<String> list = new ArrayList<>();
 		String fileName;
+		
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(target))
 		{
 		    for (Path file: stream)
 		    {
 		    	fileName = file.getFileName().toString();
-		    	System.out.println(fileName);
 		        list.add(fileName);
 		    }
+		    
+		    stream.close();
 		}
 		catch(IOException e)
 		{
@@ -62,11 +95,20 @@ public class EnvironmentManager
 		
 		return list;
 	}
-	
-	public static ArrayList<String> loadRequiredResourcesList(Path target)
+	/**
+	 * getRequiredResourcesList method gets a list of required resources from the
+	 * requiredResources.txt file at Path target; it loads it into an ArrayList<String>
+	 * and passes it to the setUpEnvironment method.
+	 * 
+	 * @param target Path object specifying requiredResources.txt location
+	 * 
+	 * @return list ArrayList<String> holding requiredResources
+	 */
+	public static ArrayList<String> getRequiredResourcesList(Path target)
 	{
 		ArrayList<String> list = new ArrayList<>();
 		String line;
+		
 		try
 		{
 			Scanner reader = new Scanner(target);
@@ -74,9 +116,11 @@ public class EnvironmentManager
 			while(reader.hasNextLine())
 			{
 				line = reader.nextLine();
-				System.out.println(line);
+				
 				list.add(line);
 			}
+			
+			reader.close();
 		}
 		catch (IOException e)
 		{
@@ -85,7 +129,11 @@ public class EnvironmentManager
 		
 		return list;
 	}
-	
+	/**
+	 * checkFile method checks whether or not a file exists at the specified Path target.
+	 * @param target Path object detailing a file location
+	 * @return true/false on Files.exist(target) outcome
+	 */
 	public static boolean checkFile(Path target)
 	{
 		return Files.exists(target);
