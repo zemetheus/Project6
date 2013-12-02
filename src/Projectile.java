@@ -1,10 +1,19 @@
 import java.awt.*;
 import java.util.ArrayList;
 
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+import javax.imageio.ImageIO;
+
+
 public class Projectile extends SpaceObject
 {
 	private boolean isInvalid,
 					isPlayerProjectile;
+	
+	private BufferedImage missile = null;
+	
 	/**
 	 * empty constructor
 	 */
@@ -25,8 +34,8 @@ public class Projectile extends SpaceObject
 		super(xCoord,yCoord);
 		
 		//Projectiles are always circles with radius 10; 
-		super.setSOWidth(10);
-		super.setSOHeight(10);
+		super.setSOWidth(11);
+		super.setSOHeight(15);
 		
 		//projectiles only move vertically.
 		super.setXVel(0);
@@ -36,18 +45,26 @@ public class Projectile extends SpaceObject
 		else
 			super.setYVel(4);
 		
-		//projectiles are always white
-		super.setColor(new Color(255,255,255));
-		
 		this.isPlayerProjectile = isPlayerProjectile;
 		this.isInvalid = false;
+		
+		//load projectile image
+		String dir;
+		if(isPlayerProjectile)
+			dir = "missile.bmp";
+		else
+			dir = "enemymissile.bmp";
+		
+		super.setImage(dir);
+		
+			
 	}
 	
 	public void draw(Graphics g)
 	{
-		g.setColor(super.getColor());
-    	g.fillOval(super.getXCoord()-5,super.getYCoord(),
-    			   super.getSOWidth(),super.getSOHeight());
+		Image missile = super.getImage();
+		
+		g.drawImage(missile,super.getXCoord()-5,super.getYCoord(),this);
 	}
 	/**
 	 * move method moves the projectile vertically.

@@ -1,7 +1,10 @@
 import java.awt.*;
-import java.util.Random;
-
 import javax.swing.*;
+import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+import javax.imageio.ImageIO;
 
 public class SpaceObject extends JPanel
 {
@@ -15,7 +18,8 @@ public class SpaceObject extends JPanel
 				soWidth,
 				xVel,
 				yVel;
-	private Color color;
+	
+	private BufferedImage image = null;
 	
 	/**
 	 * Empty Constructor
@@ -30,7 +34,6 @@ public class SpaceObject extends JPanel
 		this.soWidth = setStartWidth();
 		this.xVel = setStartXVel();
 		this.yVel = 0;
-		this.color = setStartColor();
 		
 		this.entityID = ID;
 		ID++;
@@ -66,6 +69,25 @@ public class SpaceObject extends JPanel
 			yVel *= -1;
 			yCoord = 0;
 		}
+	}
+	public void setImage(String imageName)
+	{
+		String dir = "Images/" + imageName;
+		
+		try
+		{
+			image = ImageIO.read(new File(dir));
+		}
+		catch(IOException e)
+		{
+			System.out.println(imageName);
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+	public Image getImage()
+	{
+		return image;
 	}
 	/**
 	 * setShipID sets projectileID
@@ -151,7 +173,9 @@ public class SpaceObject extends JPanel
 	{
 		int width;
 		
-		width = 55 - (int)(15 * new Random().nextGaussian());
+		int temp =  (new Random().nextGaussian() < .5) ? 55 : 80;
+		
+		width = temp;
 		
 		return width;
 	}
@@ -205,35 +229,6 @@ public class SpaceObject extends JPanel
 	public int getYVel()
 	{
 		return yVel;
-	}
-	/**
-	 * the setStartColor sets a random color to the spaceship
-	 * @return Color color
-	 */
-	public Color setStartColor()
-	{
-		int red = (int) (Math.random() * 256);
-	    int green = (int) (Math.random() * 256);
-	    int blue = (int) (Math.random() * 256);
-	    Color ranColor = new Color(red, green, blue);
-	    
-	    return ranColor;
-	}
-	/**
-	 * setColor method sets this.color
-	 * @param color
-	 */
-	public void setColor(Color color)
-	{
-		this.color = color;
-	}
-	/**
-	 * getColor method return this.color
-	 * @return color
-	 */
-	public Color getColor()
-	{
-		return color;
 	}
 	public static void newGameResetID()
 	{

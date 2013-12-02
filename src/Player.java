@@ -23,13 +23,13 @@ public class Player extends Spaceship
 	{
 		super(xCoord,yCoord);
 		
-		super.setSOWidth(50);
+		super.setSOWidth(55);
 		super.setSOHeight(30);
 		
 		super.setXVel(0);
 		super.setYVel(0);
 		
-		super.setColor(super.setStartColor());
+		super.setImage("Player.bmp");
 	}
 	public void addLives(int lives)
 	{

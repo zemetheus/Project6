@@ -19,6 +19,17 @@ public class Spaceship extends SpaceObject
 	public Spaceship(int xCoord, int yCoord)
 	{
 		super(xCoord,yCoord);
+		
+		int width = super.getSOWidth();
+		
+		String imageName;
+		if(width == 55)
+			imageName = "Enemy1.bmp";
+		else
+			imageName = "Enemy2.bmp";
+		
+		super.setImage(imageName);
+			
 	}
 	/**
 	 * fire method instantiates and returns a new projectile at center of 
@@ -67,9 +78,8 @@ public class Spaceship extends SpaceObject
 	 */
 	public void draw(Graphics g)
 	{
-		g.setColor(super.getColor());
-		g.fillRect(super.getXCoord(), super.getYCoord(),
-				   super.getSOWidth(), super.getSOHeight());
+		Image image = super.getImage();
+		g.drawImage(image,super.getXCoord(),super.getYCoord(),this);
 	}
 	/**
 	 * setIsDestroyed method sets isDestroyed

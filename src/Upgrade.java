@@ -17,13 +17,15 @@ public class Upgrade extends SpaceObject
 		super.setXCoord(setStartXCoord());
 		super.setYCoord(15);
 		
-		super.setSOHeight(super.setStartHeight()-10);
-		super.setSOWidth(super.setStartWidth()-20);
+		super.setSOHeight(20);
+		super.setSOWidth(25);
 		
 		super.setXVel(0);
 		super.setYVel(5);
 		
 		upgradeType = ((r.nextGaussian() * 10) > 5) ? 0 : 1;
+		
+		super.setImage("upgrade"+(upgradeType+1)+".bmp");
 	}
 	
 	public int setStartXCoord()
@@ -96,35 +98,11 @@ public class Upgrade extends SpaceObject
 	public void draw(Graphics g)
 	{
 		int xCoord = super.getXCoord(),
-			yCoord = super.getYCoord(),
-			SOWidth = super.getSOWidth(),
-			SOHeight = super.getSOHeight();
+			yCoord = super.getYCoord();
 		
-		switch(upgradeType)
-		{
-			//EXTRA POINTS
-			case 0:
-			{
-				//oscillate between red and blue
-				g.setColor(Color.red);
-				g.fillOval(xCoord,yCoord,SOWidth,SOHeight);
-				g.setColor(Color.blue);
-				g.fillOval(xCoord,yCoord,SOWidth,SOHeight);
-				break;
-			}
-			//SHIELD
-			case 1:
-			{
-				g.setColor(Color.green);
-				g.fillOval(xCoord, yCoord, SOWidth, SOHeight);
-				break;
-			}
-			default:
-			{
-				System.out.println("Upgrade Type Switch Error");
-				System.exit(1);
-			}
-		}
+		Image image = super.getImage();
+		
+		g.drawImage(image,xCoord,yCoord,this);
 	}
 	/**
 	 * setIsClaimed method sets isClaimed
