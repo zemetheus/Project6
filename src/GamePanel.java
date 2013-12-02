@@ -1,7 +1,27 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * This class is the workhorse of the game.
+     * 
+     * Herein are updated the positions, speeds, existence, removal,
+     * drawing, and gamestates of all objects, score, and the game itself.
+     * 
+     * KeyListeners handle player movement, game exit and replay.
+     * 
+     * 0: start menu
+     * 1: game action!
+     * 2: victory screen!
+     * 3: loss screen D:
+     * 99: newGame catcher/flagger
+     */
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +66,12 @@ public class GamePanel extends JPanel
 		s = new Spaceship(40,40);
 		enemies.put(s.getEntityID(),s);
 		
-	
+		/*
+		 * left moves the player left
+		 * right moves the player right
+		 * space fires a projectile
+		 * escape will exit the game.
+		 */
 		addKeyListener(new KeyAdapter()
 		{
 			public void keyPressed(KeyEvent e)
@@ -92,6 +117,18 @@ public class GamePanel extends JPanel
 		);
 	}
 	
+	/**
+	 * move method handles the position, speed, existence, and removal
+	 * of all objects on the screen during gamestate 1.
+	 * 
+	 * That is, objects flagged for removal are removed, positions  and speed
+	 * are updated according to the boundaries.
+	 * 
+	 * move method returns gameState 1 is !allEnemiesDestroyed, 2 if allEnemiesDestroyed
+	 * or 3 is player.getIsDestroyed() == true;
+	 * @param gamePanel
+	 * @return
+	 */
 	public int move(GamePanel gamePanel)
 	  {
 		Projectile p;
@@ -215,7 +252,14 @@ public class GamePanel extends JPanel
 	    return gameState = 1; //continue game.move();
 	      
 	  }
-	
+	/**
+	 * startMenu method extends the KeyAdapter functionality so that
+	 * enter will start the game, and left and right, during gameStates 
+	 * 2 and 3 will move the highlight box.
+	 * 
+	 * @param gamePanel
+	 * @return
+	 */
 	public int startMenu(final GamePanel gamePanel)
 	{
 		
@@ -271,21 +315,33 @@ public class GamePanel extends JPanel
 		return gameState;
 		
 	}
-	
+	/**
+	 * victoryScreen is a dummy method for handling the victory screen during
+	 * gamestate 2
+	 * @param gamePanel
+	 * @return
+	 */
 	public int victoryScreen(GamePanel gamePanel)
 	{
 		repaint();
 		
 		return gameState;
 	}
-	
+	/**
+	 * lossScreen method is a dummy method for handling the loss screen during gameState 3
+	 * @param gamePanel
+	 * @return
+	 */
 	public int lossScreen(GamePanel gamePanel)
 	{
 		repaint();
 		
 		return gameState;
 	}
-	
+	/**
+	 * paintComponent method updates the drawings of all the objects on the screen
+	 * with respect to the gameState. Menuscreens are handled by the Scorebar class.
+	 */
 	public void paintComponent(Graphics g)
   	{
 		super.paintComponent(g);
@@ -349,11 +405,18 @@ public class GamePanel extends JPanel
 	        }
         }
     }
-	
+	/**
+	 * setGameState method sets gameState (see Game documentation for details)
+	 * @param gameState
+	 */
 	public void setGameState(int gameState)
 	{
 		this.gameState = gameState;
 	}
+	/**
+	 * getGameState method returns the gameState
+	 * @return
+	 */
 	public int getGameState()
 	{
 		return gameState;

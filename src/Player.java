@@ -1,3 +1,17 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * This class describes the player and extends the Spaceship class,
+     * thus inheriting movement and image assignment functionality from
+     * SpaceObject and fire/destroy from Spaceship.
+     * 
+     * movement however, is handled by the GamePanels KeyAdapter.
+     */
+
 public class Player extends Spaceship
 {
 	private int score = 0,
@@ -31,22 +45,42 @@ public class Player extends Spaceship
 		
 		super.setImage("Player.bmp");
 	}
+	/**
+	 * addLives method adds int lives to current nLives
+	 * @param lives
+	 */
 	public void addLives(int lives)
 	{
 		this.nLives += lives;
 	}
+	/**
+	 * setNLives method sets int nLives
+	 * @param nLives
+	 */
 	public void setNLives(int nLives)
 	{
 		this.nLives = nLives;
 	}
+	/**
+	 * getNLives method returns int nLives
+	 * @return
+	 */
 	public int getNLives()
 	{
 		return nLives;
 	}
+	/**
+	 * setHasUpgrade sets boolean hasUpgrade
+	 * @param hasUpgrade
+	 */
 	public void setHasUpgrade(boolean hasUpgrade)
 	{
 		this.hasUpgrade = hasUpgrade;
 	}
+	/**
+	 * getHasUpgrade method returns hasUpgrade
+	 * @return
+	 */
 	public boolean getHasUpgrade()
 	{
 		return hasUpgrade;

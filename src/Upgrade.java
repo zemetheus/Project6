@@ -10,6 +10,18 @@ public class Upgrade extends SpaceObject
 	
 	private Random r = new Random();
 	
+	/**
+	 * default constructor: upgrades
+	 * have a definite size and y starting position and y vel;
+	 * they do not move in the x direction.
+	 * 
+	 * upgradeType is determined at instantiation with a roughly
+	 * equal chance of bonus points or extra life.
+	 * 
+	 * also sets image. Upgrade images are titled according to
+	 * 
+	 * upgrade + n + .bmp
+	 */
 	public Upgrade()
 	{
 		super();
@@ -27,7 +39,12 @@ public class Upgrade extends SpaceObject
 		
 		super.setImage("upgrade"+(upgradeType+1)+".bmp");
 	}
-	
+	/**
+	 * setStartXCoord method sets the starting x coord at a gaussian
+	 * distribution about the center of the window width.
+	 * 
+	 * @return starting xCoord
+	 */
 	public int setStartXCoord()
 	{
 		int x,sign = 1;
@@ -40,7 +57,15 @@ public class Upgrade extends SpaceObject
 		
 		return x;
 	}
-	
+	/**
+	 * move method moves the upgrade vertically downwards towards the player
+	 * checking for the player collision, and flagging for removal
+	 * if it passes out of y or x bound.
+	 * 
+	 * @param xBound int x boundary
+	 * @param yBound int y boundary
+	 * @param player Player object holding player data
+	 */
 	public void move(int xBound, int yBound, Player player)
 	{
 		checkCollision(player);
@@ -57,7 +82,14 @@ public class Upgrade extends SpaceObject
 		}
 		
 	}
-	
+	/**
+	 * checkCollision method checks for collision with the player, as the
+	 * upgrades are non-interactable with enemies; this method
+	 * will also convey unto the player the appropriate award and
+	 * then flags the upgrade as isClaimed (marked for removal).
+	 * 
+	 * @param player Player object holding player data.
+	 */
 	public void checkCollision(Player player)
 	{
 		int xCenter1 = super.getXCoord() + (super.getSOWidth() / 2),
@@ -99,7 +131,11 @@ public class Upgrade extends SpaceObject
 			}
 		}
 	}
-	
+	/**
+	 * draw method draws the specified upgrade image to the screen at the appropriate 
+	 * coordinates.
+	 * @param g
+	 */
 	public void draw(Graphics g)
 	{
 		int xCoord = super.getXCoord(),

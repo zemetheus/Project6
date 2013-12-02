@@ -1,3 +1,18 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * This class is a parent class and never instantiated. It provides
+     * basic position and speed tracking, as well as an interface
+     * for image assignment. This class also provides a static integer
+     * for tracking entity ids- thus matching projectiles to 
+     * their respective ships ensuring that no object extended from
+     * this class may have more than one projectile.
+     */
+
 import java.awt.*;
 import javax.swing.*;
 import java.util.Random;
@@ -25,7 +40,13 @@ public class SpaceObject extends JPanel
 	 * Empty Constructor
 	 */
 	public SpaceObject(){}
-	
+	/**
+	 * default constructor- width is random between 55 and 80 (roughly equal chance)
+	 * height is always 30px.
+	 * 
+	 * @param xCoord int initial x coordinate
+	 * @param yCoord int initial y coordinate
+	 */
 	public SpaceObject(int xCoord, int yCoord)
 	{
 		this.xCoord = xCoord;
@@ -38,7 +59,11 @@ public class SpaceObject extends JPanel
 		this.entityID = ID;
 		ID++;
 	}
-	
+	/**
+	 * move method provides a basic movement method for this class's 
+	 * children; xCoord and yCoord positions are increased, respectively,
+	 * by the xVel and yVel magnitudes; ensuring they don't move out of bounds.
+	 */
 	public void move(int xBound, int yBound)
 	{
 		xCoord += xVel;
@@ -46,7 +71,12 @@ public class SpaceObject extends JPanel
 		
 		checkBounds(xBound,yBound);
 	}
-	
+	/**
+	 * checkBounds method ensures that nothing moves off the screen; it
+	 * will reverse directional movement if necessary.
+	 * @param w x boundary integer
+	 * @param h y boundary integer
+	 */
 	public void checkBounds(int w, int h)
 	{
 		if(xCoord > (w - soWidth))
@@ -70,6 +100,10 @@ public class SpaceObject extends JPanel
 			yCoord = 0;
 		}
 	}
+	/**
+	 * setImage method assigns an image to this object based on its width.
+	 * @param imageName
+	 */
 	public void setImage(String imageName)
 	{
 		String dir = "Images/" + imageName;
@@ -85,6 +119,10 @@ public class SpaceObject extends JPanel
 			System.exit(0);
 		}
 	}
+	/**
+	 * getImage method returns the image assigned to this object
+	 * @return image
+	 */
 	public Image getImage()
 	{
 		return image;
@@ -221,19 +259,32 @@ public class SpaceObject extends JPanel
 	{
 		return xVel;
 	}
-	//public int setStartYVel(){}
+	/**
+	 * setYVel method sets int yVel
+	 * @param yVel
+	 */
 	public void setYVel(int yVel)
 	{
 		this.yVel = yVel;
 	}
+	/**
+	 * getYVel method returns int yVel (velocity in the y direction)
+	 * @return
+	 */
 	public int getYVel()
 	{
 		return yVel;
 	}
+	/**
+	 * newGameResetID method resets ID to 0 thus accounting for a new Player
+	 */
 	public static void newGameResetID()
 	{
 		ID = 0;
 	}
+	/**
+	 * resetID method resets ID to 1, as Player does not change, only its position.
+	 */
 	public static void resetID()
 	{
 		ID = 1; //player always has 0

@@ -1,18 +1,25 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * The projectile class describes a projectile; it extends 
+     * the SpaceObject class thus inheriting basic coordinate
+     * and speed and image assignment functionality.
+     * 
+     * The move method adds functionality in boundary checking, as well
+     * as collisions with the player or enemies.
+     */
+
 import java.awt.*;
 import java.util.ArrayList;
-
-import java.awt.image.BufferedImage;
-import java.io.*;
-
-import javax.imageio.ImageIO;
-
 
 public class Projectile extends SpaceObject
 {
 	private boolean isInvalid,
 					isPlayerProjectile;
-	
-	private BufferedImage missile = null;
 	
 	/**
 	 * empty constructor
@@ -59,7 +66,11 @@ public class Projectile extends SpaceObject
 		
 			
 	}
-	
+	/**
+	 * draw method draws this objects assigned image to the appropriate 
+	 * coordinates
+	 * @param g
+	 */
 	public void draw(Graphics g)
 	{
 		Image missile = super.getImage();

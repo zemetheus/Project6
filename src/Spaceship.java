@@ -1,3 +1,17 @@
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * This class describes the enemies against whom the
+     * player faces. It extends the SpaceObject class
+     * thus inheriting general position data and methods.
+     * 
+     * Adds a fire method and a destroy method.
+     */
+
 import java.awt.*;
 import javax.swing.*;
 

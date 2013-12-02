@@ -5,14 +5,17 @@
      * Michael Ondrasek
      * 
      * PURPOSE:
-     * This class describes a ball: how it moves, its size, and its color.
+     * This class describes the frame holding the action!
      * 
-     * It's movement routines detect for collisions against other balls
-     * and outer boundaries. Further, if the flag isCollided is true,
-     * the ball is ignored until it is removed.
+     * The Game operates on a "gameState" loop, where, as 
+     * the game enters different states, the loop calls different methods from
+     * the gamePanel.
      * 
-     * @author MOndrasek wrote this class 10 Aug 2012
-     * modified by Cogan Shimizu 11/30/2013
+     * 0: start menu
+     * 1: game action!
+     * 2: victory screen!
+     * 3: loss screen D:
+     * 99: newGame catcher/flagger
      */
 
 import java.awt.*;
@@ -92,6 +95,10 @@ public class Game extends JFrame
     	}
    	}
 	
+    /**
+     * getStartNewGame returns boolean startNewGame
+     * @return
+     */
     public boolean getStartNewGame()
     {
     	return startNewGame;

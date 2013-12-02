@@ -1,5 +1,21 @@
-import java.awt.*;
+/** 
+     * Cogan Shimizu
+     * CS-1180L-90
+     * Kurtis Glendenning
+     * Michael Ondrasek
+     * 
+     * PURPOSE:
+     * The Scorebar class handles the drawing of
+     * all screens that are not the main game screen.
+     * 
+     * That is to say, it handles GameOver, VictoryScreen
+     * and the highlighting for replay/no replay.
+     * 
+     * As the name implies, it also handles the updating and drawing of 
+     * the scorebar.
+     */
 
+import java.awt.*;
 import javax.swing.*;
 
 public class Scorebar extends JPanel
@@ -47,6 +63,7 @@ public class Scorebar extends JPanel
 	}
 	/**
 	 * drawStartMenu method draws the start menu
+	 * with instructions!
 	 * @param g
 	 */
 	public void drawStartMenu(Graphics g)
@@ -58,8 +75,8 @@ public class Scorebar extends JPanel
     	
     	g.drawLine(201,125,295,125);
     	
-    	centerString("ENTER - start the game",g,4);
-    	centerString("ESCAPE - exit the game",g,5);
+    	centerString("ENTER - start the game",g,3);
+    	centerString("ESCAPE - exit the game",g,4);
     	
     	centerString("LEFT ARROW - move left",g,6);
     	centerString("RIGHT ARROW - move right",g,7);
@@ -67,6 +84,13 @@ public class Scorebar extends JPanel
     	centerString("BLUE CIRCLE - Bonus Points!",g,11);
     	centerString("GREEN CIRCLE - Bonus Life!",g,12);
 	}
+	/**
+	 * drawVictoryScreen method draws the victory screen. allows for replay
+	 * based on user input by calling drawReplay and drawHighlight.
+	 * @param g
+	 * @param highlight int received from KeyAdapter when in
+	 * gamestate 2/3; 0 is yes/left, 1 is right/no.
+	 */
 	public void drawVictoryScreen(Graphics g,int highlight)
 	{
 		g.setColor(Color.white);
@@ -75,7 +99,14 @@ public class Scorebar extends JPanel
 		drawHighlight(g,highlight);
 		drawReplay(g);
 	}
-	
+	/**
+	 * centerString prints a msg centered on a "line."
+	 * line 0 starts at 100px y plane. one line is 20px.
+	 * line = 100 + 20n
+	 * @param msg
+	 * @param g
+	 * @param nLine
+	 */
 	public void centerString(String msg, Graphics g, int nLine)
 	{
 		int center, length;
@@ -85,7 +116,12 @@ public class Scorebar extends JPanel
     	center = (500 - length) / 2;
     	g.drawString(msg, center, 100+(nLine * 20));
 	}
-	
+	/**
+	 * draws the gameOver screen
+	 * @param g
+	 * @param highlight int received from KeyAdapter when in
+	 * gamestate 2/3; 0 is yes/left, 1 is right/no.
+	 */
 	public void drawGameOverScreen(Graphics g,int highlight)
 	{
 		g.setColor(Color.white);
@@ -94,6 +130,11 @@ public class Scorebar extends JPanel
 		drawHighlight(g,highlight);
 		drawReplay(g);
 	}
+	/**
+	 * helper routine for gameover and victory screen, draws 
+	 * the highlighter rect based on key input from the KeyAdapter
+	 * during gameState 2/3.
+	 */
 	public void drawHighlight(Graphics g, int highlight)
 	{
 		g.setColor(Color.gray);
@@ -116,19 +157,30 @@ public class Scorebar extends JPanel
 			}
 		}
 	}
+	/**
+	 * helper routine for displaying replay and the highlightable yes/no
+	 * @param g
+	 */
 	public void drawReplay(Graphics g)
 	{
 		g.setColor(Color.white);
 		centerString("Replay?", g, 12);
 		centerString("YES            NO",g,14);
 	}
-	
+	/**
+	 * updateScorebar updates the scorebar 
+	 * @param player
+	 */
 	public void updateScorebar(Player player)
 	{
-		this.scoreValue = player.getScore();
-		
+		setScore(player.getScore());
 		setLivesValue(player.getNLives());
 	}
+	/**
+	 * setLivesValue method sets the livesValue, also
+	 * parses as string for printing.
+	 * @param livesValue
+	 */
 	public void setLivesValue(int livesValue)
 	{
 		this.livesValue = livesValue;
