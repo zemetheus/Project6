@@ -2,6 +2,8 @@ public class Main
 {
 	public static void main(String[] args)
 	{
+		EnvironmentManager.setUpEnvironment();
+		
 		//Game object contains main game loop
 		Game game;
 		boolean newGame = true;

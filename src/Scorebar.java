@@ -35,12 +35,15 @@ public class Scorebar extends JPanel
 	public void drawScorebar(Graphics g)
 	{
 		g.setColor(Color.white);
-        g.drawString(SCORE, 10, 600);
-        g.drawString(LEVEL, 10, 615);
-        g.drawString(LIVES, 10, 630);
-        g.drawString(scoreString, 10+SCORE_WIDTH,600);
-        g.drawString(levelString, 10+LEVEL_WIDTH,615);
-        g.drawString(livesString, 10+LIVES_WIDTH,630);
+		g.drawLine(0, 655, 500, 655);
+		
+		g.setColor(Color.white);
+        g.drawString(SCORE, 10, 675);
+        g.drawString(LEVEL, 10, 690);
+        g.drawString(LIVES, 10, 705);
+        g.drawString(scoreString, 10+SCORE_WIDTH,675);
+        g.drawString(levelString, 10+LEVEL_WIDTH,690);
+        g.drawString(livesString, 10+LIVES_WIDTH,705);
 	}
 	/**
 	 * drawStartMenu method draws the start menu

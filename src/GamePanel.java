@@ -40,7 +40,7 @@ public class GamePanel extends JPanel
 		scorebar.setLevelValue(level);
 		
 		//player is always hxw 30x50
-		player = new Player(235,650);
+		player = new Player(235,610);
 		Spaceship s;
 		
 		s = new Spaceship(40,40);
@@ -110,7 +110,7 @@ public class GamePanel extends JPanel
 				p = projectiles.get(i);
 				
 				//move projectiles, also flags projectiles for being out of range
-				p.move(gamePanel,new ArrayList<Spaceship>(enemies.values()),player);
+				p.move(new ArrayList<Spaceship>(enemies.values()),player);
 				
 				//make note of outOfRange projectiles
 				if(p.getIsInvalid())
@@ -174,13 +174,14 @@ public class GamePanel extends JPanel
 			}
 			else
 			{
+				//reset data for next level
 				enemies.clear();
 				Spaceship.resetID();
 				
 				upgrade = new Upgrade();
 				
 				player.setXCoord(235);
-				player.setYCoord(650);
+				player.setYCoord(610);
 				
 				level++;
 				scorebar.setLevelValue(level);

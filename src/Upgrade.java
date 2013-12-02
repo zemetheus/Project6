@@ -60,15 +60,20 @@ public class Upgrade extends SpaceObject
 	
 	public void checkCollision(Player player)
 	{
-		int xCenter = super.getXCoord() + (super.getSOWidth() / 2),
-			yCenter = super.getYCoord() + (super.getSOHeight() / 2),
-			xBoundLow = player.getXCoord(),
-			xBoundHigh = xBoundLow + player.getSOWidth(),
-			yBoundLow = player.getYCoord(),
-			yBoundHigh = yBoundLow+player.getSOHeight();
+		int xCenter1 = super.getXCoord() + (super.getSOWidth() / 2),
+			yCenter1 = super.getYCoord() + (super.getSOHeight() / 2),
+			xCenter2 = player.getXCoord() + (super.getSOWidth() / 2),
+			yCenter2 = player.getYCoord() + (super.getSOHeight() / 2),
+			xRadius1 = super.getSOWidth() / 2,
+			yRadius1 = super.getSOHeight() / 2,
+			xRadius2 = player.getSOWidth() / 2,
+			yRadius2 = player.getSOHeight() / 2,
+			dx = Math.abs(xCenter1 - xCenter2),
+			dy = Math.abs(yCenter1 - yCenter2),
+			rx = xRadius1 + xRadius2,
+			ry = yRadius1 + yRadius2;
 			
-		if(xCenter > xBoundLow && xCenter < xBoundHigh &&
-		   yCenter > yBoundLow && yCenter < yBoundHigh)
+		if(dx < rx && dy < ry)
 		{
 			this.isClaimed = true;
 			

@@ -72,14 +72,13 @@ public class Projectile extends SpaceObject
 	 * @param ships ArrayList<Spaceship> containing all enemies' data
 	 * @param player Player object representing player
 	 */
-	public void move(GamePanel gp,ArrayList<Spaceship> ships,Player player)
+	public void move(ArrayList<Spaceship> ships,Player player)
 	{
-		int w = gp.getHeight(),
-			yCoord = super.getYCoord();
+		int yCoord = super.getYCoord();
 		
 		super.setYCoord(yCoord + super.getYVel());
 		
-		if(yCoord > w || yCoord < 0)
+		if(yCoord > 655-super.getSOHeight() || yCoord < 0)
 			isInvalid = true;
 		else
 			isInvalid = false;
