@@ -19,6 +19,9 @@ public class Spaceship extends SpaceObject
 {
 	private boolean isDestroyed = false;
 	private boolean hasProjectile = false;
+	private boolean didExplode = false;
+	
+	private static int explosionCounter = 0;
 	
 	/**
 	 * Empty Constructor
@@ -38,9 +41,9 @@ public class Spaceship extends SpaceObject
 		
 		String imageName;
 		if(width == 55)
-			imageName = "Enemy1.bmp";
+			imageName = "enemy1.bmp";
 		else
-			imageName = "Enemy2.bmp";
+			imageName = "enemy2.bmp";
 		
 		super.setImage(imageName);
 			
@@ -93,7 +96,37 @@ public class Spaceship extends SpaceObject
 	public void draw(Graphics g)
 	{
 		Image image = super.getImage();
+		
 		g.drawImage(image,super.getXCoord(),super.getYCoord(),this);
+	}
+	public void drawExplosion(Graphics g)
+	{
+		super.setImage("explosion.bmp");
+		
+		Image image = super.getImage();
+		
+		g.drawImage(image,super.getXCoord(),super.getYCoord(),this);
+		
+		if(explosionCounter > 10)
+			didExplode = true;
+		
+		explosionCounter++;
+	}
+	/**
+	 * setDidExplode method sets boolean didExplode
+	 * @param didExplode
+	 */
+	public void setDidExplode(boolean didExplode)
+	{
+		this.didExplode = didExplode;
+	}
+	/**
+	 * getDidExplode returns boolean didExplode
+	 * @return
+	 */
+	public boolean getDidExplode()
+	{
+		return didExplode;
 	}
 	/**
 	 * setIsDestroyed method sets isDestroyed

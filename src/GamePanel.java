@@ -211,6 +211,11 @@ public class GamePanel extends JPanel
 			}
 			else
 			{
+				
+				for(int n=0;n<10;n++)
+					repaint();
+				
+				Pauser.pause(100);
 				//reset data for next level
 				enemies.clear();
 				Spaceship.resetID();
@@ -228,6 +233,8 @@ public class GamePanel extends JPanel
 					ss = new Spaceship(40,40*(i+1));
 					enemies.put(ss.getEntityID(),ss);
 				}
+				
+				return gameState;
 			}
 		}
 		
@@ -338,6 +345,13 @@ public class GamePanel extends JPanel
 		
 		return gameState;
 	}
+	public int levelAnnouncement(GamePanel gamePanel)
+	{
+		for(int n=0;n<500;n++)
+			repaint();
+		
+		return gameState;
+	}
 	/**
 	 * paintComponent method updates the drawings of all the objects on the screen
 	 * with respect to the gameState. Menuscreens are handled by the Scorebar class.
@@ -375,9 +389,15 @@ public class GamePanel extends JPanel
 			    
 			    //Draw Enemies
 			    for(Spaceship ship : enemies.values())
+			    {
 			    	if(!ship.getIsDestroyed())
-				        ship.draw(g);
-			       
+			    		ship.draw(g);
+			    	else
+			    	{
+			    		if(!ship.getDidExplode())
+			    			ship.drawExplosion(g);
+			    	}
+			    }   
 			    //Draw Player
 			    player.draw(g);
 		        

@@ -56,7 +56,7 @@ public class Game extends JFrame
 	    //main game loop, close to halt
 	    while(!startNewGame)
 	    {
-	    	pause();
+	    	Pauser.pause(10);
 	    	switch(gameState)
 	    	{
 		   		case 0:
@@ -102,25 +102,6 @@ public class Game extends JFrame
     public boolean getStartNewGame()
     {
     	return startNewGame;
-    }
-    
-    
-	/**
-     * Pause command used to control the speed of animation.
-     * Currently pauses for 10 ms. Use smaller values for faster animation and
-     * vice versa.
-     */
-    public static void pause()
-    {
-    	try
-	    {
-    		Thread.sleep(10); //pause for 10 ms
-	    }
-	    catch (Exception e)
-	    {
-	    	System.out.println(e);
-	        e.printStackTrace();
-	    }
     }
     
     /**

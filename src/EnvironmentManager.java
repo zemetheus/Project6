@@ -51,7 +51,8 @@ public class EnvironmentManager
 				}
 				else
 				{
-					System.out.println("Error");
+					System.out.println(s+" does not exist.");
+					System.out.println("Please reverify installation.");
 					System.exit(1);
 				}
 					
@@ -61,8 +62,7 @@ public class EnvironmentManager
 		else
 		{
 			System.out.println("The File System is not intact.");
-			System.out.println("Please verify that the Images folder " +
-							   "and requiredResourceFile exist.");
+			System.out.println("Please reverify installation.");
 			System.exit(1);
 		}
 	}
@@ -136,6 +136,14 @@ public class EnvironmentManager
 	 */
 	public static boolean checkFile(Path target)
 	{
-		return Files.exists(target);
+		boolean exists = Files.exists(target);
+		
+		if(exists)
+			return exists;
+		else
+		{
+			System.out.println(target.getFileName()+ "does not exist.");
+			return exists;
+		}
 	}	
 }
